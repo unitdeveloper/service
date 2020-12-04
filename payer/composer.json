@@ -1,0 +1,201 @@
+{
+  "info": {
+    "_postman_id": "16f645a9-161b-4b18-9994-7d93ff007984",
+    "name": "interhub_merchant",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "7413fb5d-f522-4a2b-bd0e-216bd65b8981",
+            "exec": [
+              "if(responseCode.code === 200){",
+              "    var data = JSON.parse(responseBody);",
+              "    postman.setEnvironmentVariable(\"bill_id\", data.id);   ",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"method\": \"check\",\n  \"merchant_id\": 123,\n  \"account\": \"333222444\",\t\n  \"amount\": 3000.00,// валюта от договора\n  \"params\" : {}\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/pkbillms/api/agent/check?Automatically follow redirects",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "pkbillms",
+            "api",
+            "agent",
+            "check"
+          ],
+          "query": [
+            {
+              "key": "Automatically follow redirects",
+              "value": null
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Pay",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2e5c2be6-6f2c-4ad9-b00d-aed140302862",
+            "exec": [
+              "if(responseCode.code === 200){",
+              "    var data = JSON.parse(responseBody);",
+              "    postman.setEnvironmentVariable(\"bill_id\", data.id);   ",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"method\": \"check\",\n  \"merchant_id\": 123,\n  \"account\": \"333222444\",\t\n  \"amount\": 3000.00,// валюта от договора\n  \"params\" : {}\n}\n",
+          "options": {
+            "raw": {}
+          }
+        },
+        "url": {
+          "raw": "{{url}}/pkbillms/api/agent/pay?",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "pkbillms",
+            "api",
+            "agent",
+            "pay"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": null
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Check Status",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "54756da4-a52c-4fac-94fd-2fe1e3e7e479",
+            "exec": [
+              "if(responseCode.code === 200){",
+              "    var data = JSON.parse(responseBody);",
+              "    postman.setEnvironmentVariable(\"item_id\", data.id);   ",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": " {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"method\": \"check_status\",\n  \"transaction_id\": \"87967231\"\n}\n",
+          "options": {
+            "raw": {}
+          }
+        },
+        "url": {
+          "raw": "{{url}}/pkbillms/api/agent/status",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "pkbillms",
+            "api",
+            "agent",
+            "status"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "24009cae-fead-4167-9c5c-a5b885bf628b",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "d7a2c148-7a9a-49ab-8fbb-044c9f107a33",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "protocolProfileBehavior": {}
+}

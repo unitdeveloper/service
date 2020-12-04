@@ -1,0 +1,5 @@
+@@ -1 +1 @@
+-D:\Develop\Projects\ALL\asrorz\zetsoft\service\parser/sample/old_file.txt
+\ No newline at end of file
++D:\Develop\Projects\ALL\asrorz\zetsoft\service\parser/sample/new_file.txt
+\ No newline at end of file

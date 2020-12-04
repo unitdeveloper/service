@@ -1,0 +1,20 @@
+{
+  "message": {
+    "to": "Jack Smith",
+    "from": "Jane Doe",
+    "subject": "Hello World",
+    "body": "Hello, whats going on..."
+  },
+  "message": {
+    "to": "Jack Smith",
+    "from": "Jane Doe",
+    "subject": "Hello World",
+    "body": "Hello, whats going on..."
+  },
+  "message": {
+    "to": "Jack Smith",
+    "from": "Jane Doe",
+    "subject": "Hello World",
+    "body": "Hello, whats going on..."
+  }
+}

@@ -1,0 +1,10 @@
+Ignore
+
+    test
+    @
+
+
+Always
+
+    core
+    auth
