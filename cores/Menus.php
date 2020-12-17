@@ -12,6 +12,7 @@ namespace zetsoft\service\cores;
 
 
 use yii\caching\TagDependency;
+use yii\web\NotFoundHttpException;
 use zetsoft\dbitem\wdg\MenuDataItem;
 use zetsoft\dbitem\wdg\MenuItem;
 use zetsoft\models\dyna\DynaChess;
@@ -192,6 +193,7 @@ class Menus extends ZFrame
 
         if ($model === null) {
             $this->alertDanger('Model not found', 'Error');
+            throw new NotFoundHttpException();
             return null;
         }
         $dataitem = new MenuDataItem();

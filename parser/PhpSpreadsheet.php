@@ -3,7 +3,7 @@
 
 namespace zetsoft\service\parser;
 
-require Root . '/vendori/fileapp/office/vendor/autoload.php';
+require Root . '/vendors/fileapp/office/vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;

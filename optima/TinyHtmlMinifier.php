@@ -2,8 +2,8 @@
 
 namespace zetsoft\service\optima;
 
-//require Root . '/vendori/optima/Html/vendor/autoload.php';
-require Root . '/vendori/parser/html/vendor/autoload.php';
+//require Root . '/vendors/optima/Html/vendor/autoload.php';
+require Root . '/vendors/parser/html/vendor/autoload.php';
 
 
 use Minifier\TinyMinify;

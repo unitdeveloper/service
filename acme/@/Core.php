@@ -7,7 +7,7 @@ namespace zetsoft\service\acmes;
  * https://packagist.org/packages/acmephp/core
  */
 
-require Root . '/vendori/acmes/vendor/autoload.php';
+require Root . '/vendors/acmes/vendor/autoload.php';
 
 use zetsoft\system\kernels\ZFrame;
 

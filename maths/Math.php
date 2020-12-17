@@ -9,7 +9,7 @@
 
 namespace zetsoft\service\maths;
 
-require Root.'/vendori/maths/vendor/autoload.php';
+require Root.'/vendors/maths/vendor/autoload.php';
 
 use zetsoft\system\kernels\ZFrame;
 use Brick\Math\BigDecimal;

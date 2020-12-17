@@ -1,7 +1,7 @@
 <?php
 
 namespace zetsoft\service\webs;
-require Root . '/vendori/utility/league/vendor/autoload.php';
+require Root . '/vendors/utility/league/vendor/autoload.php';
 
 use League\OAuth2\Client\Provider\Facebook;
 use League\OAuth2\Client\Provider\Github;

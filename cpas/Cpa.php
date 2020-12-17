@@ -13,7 +13,8 @@
  */
 
 namespace zetsoft\service\cpas;
-require Root . '/vendori/fileapp/office/vendor/autoload.php';
+require Root . '/vendors/fileapp/office/vendor/autoload.php';
+require Root . '/vendors/netter/ALL/vendor/autoload.php';
 
 /**
  *
@@ -22,11 +23,11 @@ require Root . '/vendori/fileapp/office/vendor/autoload.php';
  * @license Jakhongir Kudratov
  */
 
- 
 
 use PhpOffice\PhpWord\Shared\ZipArchive;
 use PHPUnit\Util\Exception;
 use PhpZip\ZipFile;
+use React\EventLoop\Factory;
 use Telegram\Bot\Helpers\Emojify;
 use yii\rbac\DbManager;
 use zetsoft\dbcore\ALL\CoreRoleCore;
@@ -66,7 +67,7 @@ class Cpa extends ZFrame
     public $indexFile = Root . '/render/cpanet/index.php';
     public $thanksFile = Root . '/render/cpanet/thanks.php';
     public $indexPre = Root . '/render/cpanet/indexPre.php';
-    public $indexLink = Root.'/render/cpanet/indexForm.php';
+    public $indexLink = Root . '/render/cpanet/indexForm.php';
     public $mainFileP = Root . '/render/cpanet/Main.php';
 
     public function createOfferFolder($name)
@@ -82,9 +83,10 @@ class Cpa extends ZFrame
         return ZFileHelper::createDirectory($path);
     }
 
+
     public function createCpasSite(CpasStreamItem $model)
     {
-        
+
         $stream = CpasStream::findOne($model->cpas_stream_id);
         $offer = CpasOffer::findOne($stream->cpas_offer_id);
         $faceBookPixel = '';
@@ -92,8 +94,7 @@ class Cpa extends ZFrame
         $yandexMetrics = '';
         $mailMetrics = '';
 
-        if ($stream->counter)
-        {
+        if ($stream->counter) {
             if ($stream->counter['facebook'])
                 $faceBookPixel = $stream->counter['facebook'];
             if ($stream->counter['google'])
@@ -104,9 +105,8 @@ class Cpa extends ZFrame
                 $mailMetrics = $stream->counter['mail'];
 
         }
-       
-        if (file_exists($this->thanksFile))
-        {
+
+        if (file_exists($this->thanksFile)) {
             $thanks = file_get_contents($this->thanksFile);
             $thanks = strtr($thanks, [
                 '{facebookPixel}' => $faceBookPixel,
@@ -116,13 +116,12 @@ class Cpa extends ZFrame
             ]);
 
         }
-         
 
-        if (!empty($model->cpas_land_id) && empty($model->cpas_trans))
-        {
+
+        if (!empty($model->cpas_land_id) && empty($model->cpas_trans)) {
             $land = CpasLand::findOne($model->cpas_land_id);
             $copyFrom = Root . $land->path;
-            $copyTo = $this->sitePath . $stream->id . "/{$model->id}".'/'.$land->title;
+            $copyTo = $this->sitePath . $stream->id . "/{$model->id}" . '/' . $land->title;
 
             ZFileHelper::cloneDir($copyFrom, $copyTo);
             $index = file_get_contents($this->indexFile);
@@ -139,27 +138,27 @@ class Cpa extends ZFrame
 
         }
 
-        if(!empty($model->cpas_trans)){
+        if (!empty($model->cpas_trans)) {
             if ($model->cpas_trans_form)
                 $land = CpasLand::findOne($model->cpas_trans_form);
             if ($model->cpas_land_id)
                 $land = CpasLand::findOne($model->cpas_land_id);
             $preland = CpasLand::findOne($model->cpas_trans);
-            $copyToPreland = $this->sitePath . $stream->id . "/{$model->id}".'/'.$preland->title . '_pre';
-            $prelendPath = Root. $preland->path;
-            
-            ZFileHelper::cloneDir($prelendPath, $copyToPreland);
-            $link = $this->urlGetBase().'/render/cpasite/'.$stream->id.'/'. $model->id . '/'.$land->title.'/index.php';
-                $indexPreland = file_get_contents($this->indexLink);
-                $replaceindex = strtr($indexPreland, [
-                    '{form_link}' => $model->trans_link ? $model->trans_link : $link,
-                    '{offer_id}' => $offer->catalog,
-                    '{auth_key}' => $this->userIdentity()->auth_key,
-                    '{item_id}' => $model->id
-                ]);
+            $copyToPreland = $this->sitePath . $stream->id . "/{$model->id}" . '/' . $preland->title . '_pre';
+            $prelendPath = Root . $preland->path;
 
-            $copyToPreland_land = $copyToPreland. '/land';
-            $land_path = Root. $land->path;
+            ZFileHelper::cloneDir($prelendPath, $copyToPreland);
+            $link = $this->urlGetBase() . '/render/cpasite/' . $stream->id . '/' . $model->id . '/' . $land->title . '/index.php';
+            $indexPreland = file_get_contents($this->indexLink);
+            $replaceindex = strtr($indexPreland, [
+                '{form_link}' => $model->trans_link ? $model->trans_link : $link,
+                '{offer_id}' => $offer->catalog,
+                '{auth_key}' => $this->userIdentity()->auth_key,
+                '{item_id}' => $model->id
+            ]);
+
+            $copyToPreland_land = $copyToPreland . '/land';
+            $land_path = Root . $land->path;
             ZFileHelper::cloneDir($land_path, $copyToPreland_land);
 
             if (is_dir($copyToPreland)) {
@@ -181,11 +180,11 @@ class Cpa extends ZFrame
             }
 
         }
-        if(!empty($model->cpas_trans_form) && empty($model->cpas_trans)){
-        
+        if (!empty($model->cpas_trans_form) && empty($model->cpas_trans)) {
+
             $preland = CpasLand::findOne($model->cpas_trans_form);
-            $copyToPreland = $this->sitePath . $stream->id . "/{$model->id}".'/'.$preland->title . '_form';
-            $prelendPath = Root. $preland->path;
+            $copyToPreland = $this->sitePath . $stream->id . "/{$model->id}" . '/' . $preland->title . '_form';
+            $prelendPath = Root . $preland->path;
             ZFileHelper::cloneDir($prelendPath, $copyToPreland);
             $index = file_get_contents($this->indexFile);
             $index = strtr($index, [
@@ -201,7 +200,7 @@ class Cpa extends ZFrame
 
         }
 
-        
+
         $zipAll = $this->sitePath . $stream->id . "/{$model->id}";
         $zipTo = $this->zipPath . $model->user_id . "/{$model->id}/";
         $zipFile = new ZipFile();
@@ -234,10 +233,9 @@ class Cpa extends ZFrame
                 'cpas_stream_id' => $model->id
             ])
             ->all();
-        foreach ($items as $item)
-        {
-            $dirto = $this->sitePath .$model->id.'/'. $item->id;
-            $dirName =  $this->zipPath . $model->user_id .'/'.$item->id;
+        foreach ($items as $item) {
+            $dirto = $this->sitePath . $model->id . '/' . $item->id;
+            $dirName = $this->zipPath . $model->user_id . '/' . $item->id;
 
             ZFileHelper::removeDir($dirName);
             ZFileHelper::removeDir($dirto);
@@ -253,7 +251,7 @@ class Cpa extends ZFrame
             ->where(['cpas_offer_id' => $id])
             ->all();
         foreach ($model as $item) {
-          
+
             $cont = PlaceCountry::findOne($item->place_country_id);
             if ($cont !== null)
                 $data[$item->place_country_id] = $cont->name;
@@ -323,7 +321,7 @@ class Cpa extends ZFrame
                 'id' => SORT_DESC
             ])
             ->all();
-        //vdd($streams);
+
         $needStreams = [];
 
         foreach ($streams as $key => $value) {
@@ -335,6 +333,7 @@ class Cpa extends ZFrame
             if ($exists)
                 $needStreams[] = $value;
         }
+
         return $needStreams;
     }
 
@@ -349,88 +348,94 @@ class Cpa extends ZFrame
      *
      */
 
-    public function urlReplace($track_id)
+    public function urlReplace($track_id, $status = 'new')
     {
         $track = CpasTracker::findOne($track_id);
         $cpas_stream_item_id = $track->cpas_stream_item_id;
         $cpas_stream_item = CpasStreamItem::findOne($cpas_stream_item_id);
-        $cpas_stream_id = $cpas_stream_item->cpas_stream_id;
-        $cpas_stream = CpasStream::findOne($cpas_stream_id);
-        $pback = $cpas_stream->postback;
-        $url = $pback['new'];
-        if (!$url)
-           return false;
-        $urlReplace = strtr($url, [
-        '{status}' => $track->status,
-        '{source}' => $track->referrer,
-        '{country}' => $track->country,
-        '{city}' => $track->city,
-        '{region}' => $track->region,
-        '{timezone}' => $track->timezone,
-        '{utc}' => $track->utc,
-        '{lat}' => $track->lat,
-        '{lon}' => $track->lon,
-        '{ip}' => $track->ip,
-        '{device_model}' => $track->device_model,
-        '{device_os}' => $track->device_os,
-        '{browser}' => $track->browser,
-        '{revenue}' => $track->revenue,
-        '{keyword}' => $track->keyword,
-        '{cost}' => $track->cost,
-        '{currency}' => $track->currency,
-        '{external_id}' => $track->external_id,
-        '{creative_id}' => $track->creative_id,
-        '{ad_campaign_id}' => $track->ad_campaign_id,
-        '{sub1}' => $track->sub_id_1,
-        '{sub2}' => $track->sub_id_2,
-        '{sub3}' => $track->sub_id_3,
-        '{sub4}' => $track->sub_id_4,
-        '{sub5}' => $track->sub_id_5,
-        '' => $track->sub_id_6,
-        ]);
-
+        $urlReplace = '';
+        if ($cpas_stream_item) {
+            $cpas_stream_id = $cpas_stream_item->cpas_stream_id;
+            $cpas_stream = CpasStream::findOne($cpas_stream_id);
+            $pback = $cpas_stream->postback;
+            if ($status === 'accept')
+                $status = 'approve';
+            $url = $pback[$status];
+            if (!$url)
+                return false;
+            $urlReplace = strtr($url, [
+                '{status}' => $track->status,
+                '{source}' => $track->referrer,
+                '{country}' => $track->country,
+                '{city}' => $track->city,
+                '{customer}' => $track->contact_name,
+                '{order}' => $track->shop_order_id,
+                '{phone}' => $track->contact_phone,
+                '{region}' => $track->region,
+                '{timezone}' => $track->timezone,
+                '{utc}' => $track->utc,
+                '{lat}' => $track->lat,
+                '{lon}' => $track->lon,
+                '{ip}' => $track->ip,
+                '{device_model}' => $track->device_model,
+                '{device_os}' => $track->device_os,
+                '{browser}' => $track->browser,
+                '{revenue}' => $track->revenue,
+                '{keyword}' => $track->keyword,
+                '{cost}' => $track->cost,
+                '{currency}' => $track->currency,
+                '{external_id}' => $track->external_id,
+                '{creative_id}' => $track->creative_id,
+                '{ad_campaign_id}' => $track->ad_campaign_id,
+                '{sub1}' => $track->sub_id_1,
+                '{sub2}' => $track->sub_id_2,
+                '{sub3}' => $track->sub_id_3,
+                '{sub4}' => $track->sub_id_4,
+                '{sub5}' => $track->sub_id_5,
+                '{sub6}' => $track->sub_id_6,
+            ]);
+        }
         return $urlReplace;
     }
 
     public function updateTrack($track_id, $order_id)
     {
         $track = CpasTracker::findOne($track_id);
-        $track->shop_order_id = $order_id;
-        if ($track->save())
-            return true;
-        else
-            return false;
-
-
+        if ($track) {
+            $track->shop_order_id = $order_id;
+            if ($track->save())
+                return true;
+        }
+        return false;
     }
 
-    public function updateStatus($track_id, $status)
+    public function updateStatus($subId, $status)
     {
-        $track = CpasTracker::findOne($track_id);
+        $track = CpasTracker::findOne(['shop_order_id' => $subId]);
         if (empty($track))
             return false;
         $cpasStreamItem = CpasStreamItem::findOne($track->cpas_stream_item_id);
-        if (empty($cpasStreamItem))
+        if ($cpasStreamItem === null)
             return false;
         $user = \zetsoft\models\user\User::findOne($cpasStreamItem->user_id);
         if ($user !== null) {
-        //vdd($this->sessionGet('bearer'));
+            //vdd($this->sessionGet('bearer'));
             //if ($user->auth_key === $this->sessionGet('bearer')) {
-                $track->status = $status;
-                if ($track->save())
-                    return true;
-                else
-                    return false;
-            }
+            $track->status = $status;
+            if ($track->save())
+                return true;
+            else
+                return false;
+        }
 
         return false;
-       /*}
-        Az::$app->response->setStatusCode('403');
-        throw new ZException(Az::l('Forbidden'));*/
+        /*}
+         Az::$app->response->setStatusCode('403');
+         throw new ZException(Az::l('Forbidden'));*/
     }
 
 
-     #region status and balance
+    #region status and balance
 
     //start|JakhongirKudratov|2020-10-10
 
@@ -445,15 +450,15 @@ class Cpa extends ZFrame
      */
     public function setBalance(CpasTracker $model)
     {
-/*
-        vd($model->oldAttributes);
-        vdd($model->attributes);*/
+        /*
+                vd($model->oldAttributes);
+                vdd($model->attributes);*/
         //start|JakhongirKudratov|2020-10-12
 
-    if ($model->isNewRecord)
-        return true;
+        if ($model->isNewRecord)
+            return true;
 
-        if ($model->oldAttributes['status'] === CpasTracker::status['accept']){
+        if ($model->oldAttributes['status'] === CpasTracker::status['accept']) {
             if ($this->balance($model, 'minus'))
                 return true;
         }
@@ -469,7 +474,7 @@ class Cpa extends ZFrame
     }
 
     //end|JakhongirKudratov|2020-10-12
-    
+
     /**
      *
      * Function  balance
@@ -480,15 +485,30 @@ class Cpa extends ZFrame
      * @author JakhongirKudratov
      */
 
-    public function balance($model, $practice)
+    public function balance(CpasTracker $model, $practice)
     {
         $item = CpasStreamItem::findOne($model->cpas_stream_item_id);
         if (!empty($item->cpas_land_id))
             $land = CpasLand::findOne($item->cpas_land_id);
         elseif (!empty($item->cpas_trans_form))
             $land = CpasLand::findOne($item->cpas_trans_form);
+        elseif (!empty($item->cpas_trans))
+            $land = CpasLand::findOne($item->cpas_trans);
         else
             return null;
+        if ($land === null) {
+            $cpasStream = CpasStream::findOne($item->cpas_stream_id);
+            $user = \zetsoft\models\user\User::findOne($cpasStream->user_id);
+            $cpasOffer = CpasOffer::findOne($cpasStream->cpas_offer_id);
+            $log = "User: " . $user->email . ' - ' . date("H:i:s") . PHP_EOL .
+                "ид заказа: {$model->shop_order_id}" .PHP_EOL .
+                "action $practice" . PHP_EOL .
+                "tovar: {$cpasOffer->name} , id: {$cpasOffer->id}" . PHP_EOL .
+                "-------------------------" . PHP_EOL;
+//Save string to log, use FILE_APPEND to append.
+            file_put_contents(Root . '/storing/usersNeedToGveMoney/log_' . date("j.n.Y") . '.log', $log, FILE_APPEND);
+            return null;
+        }
         $offer_item = CpasOfferItem::findOne($land->cpas_offer_item_id);
         $money = $offer_item->pay;
         $stream = CpasStream::findOne($item->cpas_stream_id);
@@ -515,26 +535,25 @@ class Cpa extends ZFrame
         $offerName = $offer->title;
         $country = PlaceCountry::findOne($item->place_country_id);
         $lang = $country->alpha2;
-        $paste = Root. '/render/cpanet/'.$offerName. '/'. $lang . '/'.$model->title . '/';
-        $model->path = '/render/cpanet/'.$offerName. '/'. $lang . '/'.$model->title . '/';
+        $paste = Root . '/render/cpanet/' . $offerName . '/' . $lang . '/' . $model->title . '/';
+        $model->path = '/render/cpanet/' . $offerName . '/' . $lang . '/' . $model->title . '/';
 
-        if($model->type === 'trans'){
-            $paste =  Root. '/render/cpanet/'.$offerName. '/'. $lang . '-pre/'.$model->title . '/';
-            $model->path = '/render/cpanet/'.$offerName. '/'. $lang . '-pre/'.$model->title . '/';
+        if ($model->type === 'trans') {
+            $paste = Root . '/render/cpanet/' . $offerName . '/' . $lang . '-pre/' . $model->title . '/';
+            $model->path = '/render/cpanet/' . $offerName . '/' . $lang . '-pre/' . $model->title . '/';
         }
 
-        if($model->type === 'trans_form'){
-            $paste =  Root. '/render/cpanet/'.$offerName. '/'. $lang . '-form/'.$model->title . '/';
-            $model->path = '/render/cpanet/'.$offerName. '/'. $lang . '-form/'.$model->title . '/';
+        if ($model->type === 'trans_form') {
+            $paste = Root . '/render/cpanet/' . $offerName . '/' . $lang . '-form/' . $model->title . '/';
+            $model->path = '/render/cpanet/' . $offerName . '/' . $lang . '-form/' . $model->title . '/';
         }
 
-        $open = Root. '/upload/uploaz/arbit/'.$model->className.'/archive/'.$model->id.'/'.$model->archive[0];
+        $open = Root . '/upload/uploaz/arbit/' . $model->className . '/archive/' . $model->id . '/' . $model->archive[0];
         $model->place_country_id = $item->place_country_id;
         $model->save();
         $unzip = Az::$app->office->zipArchive->unzip($open, $paste);
         return $unzip;
     }
-
 
 
     #region getBalanceHistory
@@ -557,30 +576,28 @@ class Cpa extends ZFrame
         $pays_payment = collect(PaysPayment::find()->all());
         $data = [];
 
-        foreach ($users as $user)
-        {
+        foreach ($users as $user) {
             $histories = $user->balance_history;
-            foreach ($histories as $history){
+            foreach ($histories as $history) {
                 $userBy = \zetsoft\models\user\User::findOne($history['user_id']);
                 $historyBalance = new CpasBalanceHistoryForm();
                 $historyBalance->user = $user->email;
                 $historyBalance->date = $history['date'];
-                
-                    $pays = $paysWithdraw->filter(function ($value, $key) use($user, $history){
-                        if($value->modified_at == $history['date'] && $value->user_id === $user->id)
-                            return $value;
-                    })->first();
+
+                $pays = $paysWithdraw->filter(function ($value, $key) use ($user, $history) {
+                    if ($value->modified_at == $history['date'] && $value->user_id === $user->id)
+                        return $value;
+                })->first();
 
                 if (empty($pays))
                     continue;
 
-                if (!empty($pays->pays_payment_id))
-                {
+                if (!empty($pays->pays_payment_id)) {
                     $payment = $pays_payment->where('id', $pays->pays_payment_id)->first();
                     if (!empty($payment))
                         $historyBalance->pays_payment = $payment->name;
                 }
-                
+
                 if ($pays)
                     $historyBalance->balance = $pays->amount;
                 $historyBalance->userBy = isset($userBy->email) ? $userBy->email : '';
@@ -605,8 +622,8 @@ class Cpa extends ZFrame
      * @return  array
      * @throws \Exception
      */
-     
-     //start|JakhongirKudratov|2020-10-20
+
+    //start|JakhongirKudratov|2020-10-20
 
     public function getUserBalanceHistory($user_id)
     {
@@ -626,32 +643,31 @@ class Cpa extends ZFrame
         $histories = $user->balance_history;
         //vdd($histories);
         if (!empty($histories))
-            foreach ($histories as $history){
-            $userBy = \zetsoft\models\user\User::findOne($history['user_id']);
-            $historyBalance = new CpasBalanceHistoryForm();
-            $historyBalance->user = $user->email;
-            $historyBalance->date = $history['date'];
-            $pays = $paysWithdraw->filter(function ($value, $key) use($user, $history){
-                if($value->modified_at == $history['date'] && $value->user_id === $user->id)
-                    return $value;
-            })->first();
+            foreach ($histories as $history) {
+                $userBy = \zetsoft\models\user\User::findOne($history['user_id']);
+                $historyBalance = new CpasBalanceHistoryForm();
+                $historyBalance->user = $user->email;
+                $historyBalance->date = $history['date'];
+                $pays = $paysWithdraw->filter(function ($value, $key) use ($user, $history) {
+                    if ($value->modified_at == $history['date'] && $value->user_id === $user->id)
+                        return $value;
+                })->first();
 
-            if (!empty($pays->pays_payment_id))
-            {
-                $payment = $pays_payment->where('id', $pays->pays_payment_id)->first();
-                $historyBalance->pays_payment = $payment->name;
+                if (!empty($pays->pays_payment_id)) {
+                    $payment = $pays_payment->where('id', $pays->pays_payment_id)->first();
+                    $historyBalance->pays_payment = $payment->name;
+                }
+
+                if (empty($pays))
+                    continue;
+
+                if ($pays)
+                    $historyBalance->balance = $pays->amount;
+
+                $historyBalance->userBy = isset($userBy->email) ? $userBy->email : '';
+
+                $data [] = $historyBalance;
             }
-
-            if (empty($pays))
-                continue;
-
-            if ($pays)
-                $historyBalance->balance = $pays->amount;
-
-            $historyBalance->userBy = isset($userBy->email) ? $userBy->email : '';
-
-            $data [] = $historyBalance;
-        }
 
         return $data;
 
@@ -664,7 +680,7 @@ class Cpa extends ZFrame
     public function getFilters()
     {
         $filter = new CpasFilterForm();
-        if ($this->httpIsGet()){
+        if ($this->httpIsGet()) {
             if (empty($this->httpGet()))
                 return $filter;
             $filter->selectedBtnValue = ZArrayHelper::getValue($this->httpGet(), 'selectedBtnValue');
@@ -713,7 +729,7 @@ class Cpa extends ZFrame
         //vdd($items);
         $land_ids = [];
         $preland_ids = [];
-        foreach ($items as $item){
+        foreach ($items as $item) {
             if ($item->cpas_land_id)
                 $land_ids[] = $item->cpas_land_id;
 
@@ -742,7 +758,7 @@ class Cpa extends ZFrame
             'prelands' => $prelands,
             'selectOffers' => $selectoffer
         ];
-        
+
     }
 
     #endregion
@@ -753,13 +769,13 @@ class Cpa extends ZFrame
     public function getDayByName()
     {
         $today = date('Y-m-d');
-        $yesterday = date('Y-m-d', strtotime($today .' -1 day'));
-        $previousday = date('Y-m-d', strtotime($today .' -2 day'));
-        $week = date('Y-m-d', strtotime($today .' -7 day'));
+        $yesterday = date('Y-m-d', strtotime($today . ' -1 day'));
+        $previousday = date('Y-m-d', strtotime($today . ' -2 day'));
+        $week = date('Y-m-d', strtotime($today . ' -7 day'));
         list($y, $m, $d) = explode('-', $today);
         $first_day_month = $y . '-' . $m . '-01';
-        $month = date('Y-m-d', strtotime($today .' -30 day'));
-        $getYear = date('Y'.'-01-01');
+        $month = date('Y-m-d', strtotime($today . ' -30 day'));
+        $getYear = date('Y' . '-01-01');
 
 
         return [
@@ -777,7 +793,6 @@ class Cpa extends ZFrame
 
 
     #endregion
-
 
 
     #region editStreamItem
@@ -803,8 +818,8 @@ class Cpa extends ZFrame
 
         $stream = CpasStream::findOne($model->cpas_stream_id);
 
-        $dirto = $this->sitePath .$stream->id.'/'. $model->id;
-        $dirName =  $this->zipPath . $stream->user_id .'/'.$model->id;
+        $dirto = $this->sitePath . $stream->id . '/' . $model->id;
+        $dirName = $this->zipPath . $stream->user_id . '/' . $model->id;
 
         ZFileHelper::removeDir($dirName);
         ZFileHelper::removeDir($dirto);
@@ -833,35 +848,33 @@ class Cpa extends ZFrame
      * @author JakhongirKudratov
      *
      */
-    public function createStreamItem($ids, $user_id, $model){
+    public function createStreamItem($ids, $user_id, $model)
+    {
         if (!is_array($ids))
             return false;
         $lands = collect(CpasLand::find()->all());
         $cpas_lands = $lands->whereIn(
-                'id', $ids
-            )->where(
-                'type', 'land'
-            );
+            'id', $ids
+        )->where(
+            'type', 'land'
+        );
         $cpas_trans = $lands->whereIn(
-                'id', $ids
-            )->where(
-                'type', 'trans'
-            );
+            'id', $ids
+        )->where(
+            'type', 'trans'
+        );
         $cpas_trans_form = $lands->whereIn(
-                'id', $ids
-            )->where(
-                'type', 'trans_form'
-            );
+            'id', $ids
+        )->where(
+            'type', 'trans_form'
+        );
         if (empty($cpas_lands->toArray()) && empty($cpas_trans_form->toArray()))
             return false;
-        foreach ($cpas_lands as $land)
-        {
-            if (!empty($cpas_trans->count()))
-            {
-                foreach ($cpas_trans as $pre)
-                {
+        foreach ($cpas_lands as $land) {
+            if (!empty($cpas_trans->count())) {
+                foreach ($cpas_trans as $pre) {
                     $item = new CpasStreamItem();
-                    $item->title = $pre->title.'_pre_and_land';
+                    $item->title = $pre->title . '_pre_and_land';
                     $item->cpas_trans = $pre->id;
                     $item->cpas_land_id = $land->id;
                     $item->user_id = $user_id;
@@ -869,33 +882,30 @@ class Cpa extends ZFrame
                     $item->save();
 
                 }
-            }
-            else{
+            } else {
                 $item = new CpasStreamItem();
-                $item->title = $land->title.'-land';
+                $item->title = $land->title . '-land';
                 $item->cpas_land_id = $land->id;
                 $item->user_id = $user_id;
                 $item->cpas_stream_id = $model;
                 $item->save();
             }
         }
-        if (!empty($cpas_trans_form->toArray())){
-            foreach ($cpas_trans_form as $form){
-                if (!empty($cpas_trans->count()) && empty($cpas_lands->toArray()))
-                {
-                    foreach ($cpas_trans as $pre)
-                    {
+        if (!empty($cpas_trans_form->toArray())) {
+            foreach ($cpas_trans_form as $form) {
+                if (!empty($cpas_trans->count()) && empty($cpas_lands->toArray())) {
+                    foreach ($cpas_trans as $pre) {
                         $item = new CpasStreamItem();
-                        $item->title = $pre->title.'-pre';
+                        $item->title = $pre->title . '-pre';
                         $item->cpas_trans = $pre->id;
                         $item->cpas_trans_form = $form->id;
                         $item->user_id = $user_id;
                         $item->cpas_stream_id = $model;
                         $item->save();
                     }
-                }else{
+                } else {
                     $item = new CpasStreamItem();
-                    $item->title = $form->title.'-form';
+                    $item->title = $form->title . '-form';
                     $item->cpas_trans_form = $form->id;
                     $item->user_id = $user_id;
                     $item->cpas_stream_id = $model;
@@ -947,8 +957,7 @@ class Cpa extends ZFrame
         $flows = collect(CpasStream::find()->all());
         $flowsGroup = $flows->groupBy('user_id');
         $data = [];
-        foreach ($flowsGroup as $key => $value)
-        {
+        foreach ($flowsGroup as $key => $value) {
             $flowsUserBy = new CpasUserFlowsForm();
             $user = $users->where('id', $key)->first();
             if (empty($user))
@@ -968,7 +977,7 @@ class Cpa extends ZFrame
 
     #endregion
 
-     #region getAmountToUser
+    #region getAmountToUser
 
     /**
      *
@@ -978,31 +987,34 @@ class Cpa extends ZFrame
      * @return  bool|null
      */
 
-     //start|JakhongirKudratov|2020-10-21
+    //start|JakhongirKudratov|2020-10-21
 
-     public function getAmountToUser(PaysWithdraw $model)
-     {
-         $user = \zetsoft\models\user\User::findOne($model->user_id);
-         if (empty($user))
-            return null;
-
-         $user->balance = $user->balance - $model->amount;
-         if ($user->save())
-            return true;
-
-         return null;
-     }
+    public function getAmountToUser(PaysWithdraw $model)
+    {
+        if (!$this->paramGet('withdrawed')) {
+            $user = \zetsoft\models\user\User::findOne($model->user_id);
+            if ($user === null)
+                return null;
+            if ($model->amount > 0) {
+                $user->balance = $user->balance - $model->amount;
+                if ($user->save())
+                    return true;
+                return null;
+            }
+            return false;
+        }
+    }
 
     //end|JakhongirKudratov|2020-10-21
 
     #endregion
 
-     #region
+    #region
 
-     public function generateHistory(PaysWithdraw $model)
-     {
+    public function generateHistory(PaysWithdraw $model)
+    {
 
-        if ($model->status === 'ok'){
+        if ($model->status === 'ok') {
             $history = new CpasPaysHistory();
             $history->user_id = $model->user_id;
             $history->balance = $model->amount;
@@ -1014,11 +1026,10 @@ class Cpa extends ZFrame
         }
 
         return null;
-     }
+    }
 
 
-     #endregion
-
+    #endregion
 
 
     #region deleteAllRelations
@@ -1042,15 +1053,14 @@ class Cpa extends ZFrame
                 'cpas_offer_item_id' => $model->id
             ])->all();
 
-        foreach ($lands as $land)
-        {
-            $streamItems = $cpas_stream_items->filter(function ($value, $key) use ($land){
+        foreach ($lands as $land) {
+            $streamItems = $cpas_stream_items->filter(function ($value, $key) use ($land) {
                 if (($value->cpas_land_id == $land->id || $value->cpas_trans === $land->id || $value->cpas_trans_form === $land->id))
                     return $value;
-                });
+            });
 
             foreach ($streamItems as $item) {
-               $item->delete();
+                $item->delete();
             }
             $land->delete();
         }

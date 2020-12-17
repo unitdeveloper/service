@@ -3,7 +3,7 @@
 
 namespace zetsoft\service\parser;
 
-require Root . '/vendori/parser/vendor/autoload.php';
+require Root . '/vendors/parser/vendor/autoload.php';
 
 
 use zetsoft\system\kernels\ZFrame;

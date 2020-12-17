@@ -5,7 +5,7 @@ namespace zetsoft\service\acme;
 
 use zetsoft\system\kernels\ZFrame;
 
-include Root . '/vendori/acmes/vendor/autoload.php';
+include Root . '/vendors/acmes/vendor/autoload.php';
 
 use stonemax\acme2\Client;
 use stonemax\acme2\constants\CommonConstant;

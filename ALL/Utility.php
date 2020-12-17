@@ -24,7 +24,6 @@ use zetsoft\service\utility\ExecsAsync;
 use zetsoft\service\utility\Fast;
 use zetsoft\service\utility\File;
 use zetsoft\service\utility\FtpFull;
-use zetsoft\service\utility\Infinite;
 use zetsoft\service\utility\MadelineProto;
 use zetsoft\service\utility\Mails;
 use zetsoft\service\utility\MailsOtabek;
@@ -69,7 +68,6 @@ use yii\base\Component;
 * @property Fast $fast
 * @property File $file
 * @property FtpFull $ftpFull
-* @property Infinite $infinite
 * @property MadelineProto $madelineProto
 * @property Mails $mails
 * @property MailsOtabek $mailsOtabek
@@ -115,7 +113,6 @@ class Utility extends Component
     private $_fast;
     private $_file;
     private $_ftpFull;
-    private $_infinite;
     private $_madelineProto;
     private $_mails;
     private $_mailsOtabek;
@@ -249,15 +246,6 @@ class Utility extends Component
             $this->_ftpFull = new FtpFull();
 
         return $this->_ftpFull;
-    }
-    
-
-    public function getInfinite()
-    {
-        if ($this->_infinite === null)
-            $this->_infinite = new Infinite();
-
-        return $this->_infinite;
     }
     
 

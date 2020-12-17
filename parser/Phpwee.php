@@ -3,7 +3,7 @@
 namespace zetsoft\service\parser;
 
 
-require Root . '/vendori/parser/html/vendor/autoload.php';
+require Root . '/vendors/parser/html/vendor/autoload.php';
 
 
 

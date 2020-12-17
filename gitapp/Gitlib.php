@@ -6,7 +6,7 @@ namespace zetsoft\service\gitapp;
 use Gitonomy\Git\Repository;
 use zetsoft\system\kernels\ZFrame;
 
-require Root . '/vendori/gitapp/vendor/autoload.php';
+require Root . '/vendors/gitapp/vendor/autoload.php';
 
 /*
  *

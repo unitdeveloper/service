@@ -238,6 +238,7 @@ class Excel extends ZFrame
         $lastElement = end($models);
         // filling table
         foreach ($models as $modelNumber => $modelM) {
+
             $headerIterator = 0;
             foreach ($modelM as $colName => $colVal) {
 
@@ -266,13 +267,14 @@ class Excel extends ZFrame
 
         // setting table columns heads
         $attributeIterator = 0;
+      
         foreach ($attributeLabels as $headColName => $headColLabel) {
 
             if (!in_array($headColName, $colsToSelect, true))
                 continue;
 
             $pCoord = $this->getNameFromNumber($attributeIterator);
-            $activeSheetIndex->setCellValue($pCoord . '1', $headColLabel);
+            $activeSheetIndex->setCellValue($pCoord . '1', $headColName);$activeSheetIndex->setCellValue($pCoord . '2', $headColLabel);
 
             $sheet->getColumnDimension($pCoord)->setAutoSize(true);
             $attributeIterator++;
@@ -280,7 +282,9 @@ class Excel extends ZFrame
 
         // Rename worksheet
         $spreadsheet->getActiveSheet()->setTitle('Data');
+        $spreadsheet->getActiveSheet()->getStyle("A2:ZZ2")->getFont()->setBold( true );
 
+        $spreadsheet->getActiveSheet()->getStyle("A1:ZZ1")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('464a42');
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         $spreadsheet->setActiveSheetIndex(0);
 

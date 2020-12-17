@@ -2,7 +2,7 @@
 
 namespace zetsoft\service\socket;
 
-require Root . '/vendori/netter/ALL/vendor/autoload.php';
+require Root . '/vendors/netter/ALL/vendor/autoload.php';
 
 use Ratchet\ConnectionInterface;
 use Ratchet\Http\HttpServer;

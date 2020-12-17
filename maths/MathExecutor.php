@@ -9,7 +9,7 @@
 
 namespace zetsoft\service\maths;
 
-require Root . '/vendori/human/maths/vendor/autoload.php';
+require Root . '/vendors/human/maths/vendor/autoload.php';
 
 use League\Uri\Exception;
 use zetsoft\system\Az;

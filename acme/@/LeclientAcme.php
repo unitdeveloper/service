@@ -7,7 +7,7 @@ namespace zetsoft\service\acme;
  * https://packagist.org/packages/yourivw/leclient
  */
 
-require Root . '/vendori/acmes/vendor/autoload.php';
+require Root . '/vendors/acmes/vendor/autoload.php';
 
 use zetsoft\system\kernels\ZFrame;
 use LEClient\LEClient;

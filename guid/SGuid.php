@@ -12,7 +12,7 @@ namespace zetsoft\service\guid;
 use Sujip\Guid\Guid;
 use zetsoft\system\kernels\ZFrame;
 
-require Root . '/vendori/string/ALL/vendor/autoload.php';
+require Root . '/vendors/string/ALL/vendor/autoload.php';
 
 /**
  * Class SGuid

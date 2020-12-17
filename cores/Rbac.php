@@ -146,7 +146,7 @@ class Rbac extends ZFrame
 
             case self::target['crud']:
                 $this->allow = true;
-                //  $this->rbacCrud($value);
+                $this->rbacCrud($value);
                 break;
         }
         return $this->allow;

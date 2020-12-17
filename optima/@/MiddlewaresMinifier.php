@@ -2,7 +2,7 @@
 
 namespace zetsoft\service\optima;
 
-require Root . '/vendori/optima/html/vendor/autoload.php'; //Exception 'Error' with message 'Class 'Middlewares\Utils\Factory' not found'
+require Root . '/vendors/optima/html/vendor/autoload.php'; //Exception 'Error' with message 'Class 'Middlewares\Utils\Factory' not found'
 
 /**
  * Author:

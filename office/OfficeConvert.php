@@ -3,7 +3,7 @@
 
 namespace zetsoft\service\office;
 
-require Root . '/vendori/parser/vendor/autoload.php';
+require Root . '/vendors/parser/vendor/autoload.php';
 
 use zetsoft\system\kernels\ZFrame;
 use ncjoes\office-converter\src\OfficeConverter\OfficeConverter;

@@ -7,7 +7,7 @@ use PascalDeVink\ShortUuid\ShortUuid;
 use Ramsey\Uuid\Uuid;
 use zetsoft\system\kernels\ZFrame;
 
-require Root . '/vendori/string/ALL/vendor/autoload.php';
+require Root . '/vendors/string/ALL/vendor/autoload.php';
 
 /**
  * @author NurbekMakhmudov

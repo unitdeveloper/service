@@ -9,7 +9,7 @@ namespace zetsoft\service\calls;
 
 
 
-require Root . '/vendori/phone/vendor/autoload.php';
+require Root . '/vendors/phone/vendor/autoload.php';
 
 use zetsoft\dbitem\App\eyuf\AutoDialItem;
 use zetsoft\models\shop\ShopOrder;

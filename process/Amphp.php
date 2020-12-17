@@ -11,7 +11,7 @@
  */
 
 namespace zetsoft\service\process;
-require Root . '/vendori/amphp/vendor/autoload.php';
+require Root . '/vendors/amphp/vendor/autoload.php';
 use Amp\Coroutine;
 use Amp\Loop;
 use zetsoft\models\core\CoreQueue;

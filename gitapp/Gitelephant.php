@@ -2,7 +2,7 @@
 
 namespace zetsoft\service\gitapp;
 
-require Root.'/vendori/gitapp/vendor/autoload.php';
+require Root.'/vendors/gitapp/vendor/autoload.php';
 
 
 use GitElephant\Repository;

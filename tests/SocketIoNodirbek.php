@@ -9,7 +9,7 @@
 
 namespace zetsoft\service\tests;
 
-require Root . '/vendori/testing/vendor/autoload.php';
+require Root . '/vendors/testing/vendor/autoload.php';
 
 use Workerman\Worker;
 use PHPSocketIO\SocketIO;

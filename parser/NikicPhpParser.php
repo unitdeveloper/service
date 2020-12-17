@@ -11,7 +11,7 @@
 
 namespace zetsoft\service\parser;
 
-require Root . '/vendori/parser/excel/vendor/autoload.php';
+require Root . '/vendors/parser/excel/vendor/autoload.php';
 
 use zetsoft\system\kernels\ZFrame;
 

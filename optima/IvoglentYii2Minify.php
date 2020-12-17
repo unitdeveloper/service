@@ -3,7 +3,7 @@
 
 namespace zetsoft\service\optima;
 
-require Root . '/vendori/optima/Html/vendor/ivoglent/yii2-minify/libs/MinifyHtml.php';
+require Root . '/vendors/optima/Html/vendor/ivoglent/yii2-minify/libs/MinifyHtml.php';
 
 use ivoglent\yii2\minify\libs\MinifyHtml;
 use zetsoft\system\kernels\ZFrame;

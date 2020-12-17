@@ -165,9 +165,7 @@ class Export extends ZFrame
     //start: MurodovMirbosit 11.10.2020
     public function getSourceByUserCompany()
     {
-
         $sources = UserCompany::findOne(['type' => 'source']);
-
         $company_source = [];
         foreach ($sources as $source) {
             $order_sources = ShopOrder::findAll(['source' => $source->id]);
@@ -175,9 +173,7 @@ class Export extends ZFrame
                 $company_source = count($order_source);
             }
         }
-
         return $company_source;
-
     }
     //end
 

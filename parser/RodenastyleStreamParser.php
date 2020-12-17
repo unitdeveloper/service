@@ -5,7 +5,7 @@ namespace zetsoft\service\parser;
 
 use zetsoft\system\kernels\ZFrame;
 
-require Root . '/vendori/parser/excel/vendor/autoload.php';
+require Root . '/vendors/parser/excel/vendor/autoload.php';
 
 /**
  * @author AlisherXayrillayev

@@ -11,7 +11,7 @@
 
 namespace zetsoft\service\bot;
 
-require Root . '/vendori/botapi/vendor/autoload.php';
+require Root . '/vendors/botapi/vendor/autoload.php';
 
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\BotManFactory;

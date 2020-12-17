@@ -3,7 +3,7 @@ namespace zetsoft\service\office;
 
 use zetsoft\system\kernels\ZFrame;
 
-require Root . '/vendori/image/ALL/vendor/autoload.php';
+require Root . '/vendors/image/ALL/vendor/autoload.php';
 
 class PhpWord extends ZFrame
 {

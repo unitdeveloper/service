@@ -10,8 +10,8 @@
 
 namespace zetsoft\service\calls;
 
-require Root . '/vendori/netter/phone/vendor/autoload.php';
-//require Root . '/vendori/netapp/vendor/autoload.php';
+require Root . '/vendors/netter/phone/vendor/autoload.php';
+//require Root . '/vendors/netapp/vendor/autoload.php';
 
 require Root . '/system/consts/PAMI/EventFactoryImpl.php';
 

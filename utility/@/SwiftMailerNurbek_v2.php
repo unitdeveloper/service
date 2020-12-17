@@ -2,7 +2,7 @@
 
 namespace zetsoft\service\utility;
 
-require Root . '/vendori/utility/ALL/vendor/autoload.php';
+require Root . '/vendors/utility/ALL/vendor/autoload.php';
 
 use zetsoft\system\Az;
 use zetsoft\system\kernels\ZFrame;

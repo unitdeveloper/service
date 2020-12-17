@@ -9,7 +9,7 @@
 
 namespace zetsoft\service\payer;
 
-require Root.'/vendori/netapp/vendor/autoload.php';
+require Root.'/vendors/netapp/vendor/autoload.php';
 use GuzzleHttp\Client;
 use zetsoft\system\kernels\ZFrame;
 

@@ -44,17 +44,37 @@ class CpasStats extends ZFrame
 
     public $cpas_traks;
     public $streams;
+    public $sub;
 
     public function init()
     {
         $this->stream_items = collect(CpasStreamItem::find()->all());
         $this->streams = collect(CpasStream::find()->all());
-        $this->cpas_traks = collect(CpasTracker::find()->all());
+        $query = CpasTracker::find();
+        if ($this->httpGet('sub_id_1')) {
+            $query = $query->andWhere('sub_id_1=:param', [':param' => $this->httpGet('sub_id_1')]);
+        }
+        if ($this->httpGet('sub_id_2')) {
+            $query = $query->andWhere('sub_id_2=:param', [':param' => $this->httpGet('sub_id_2')]);
+        }
+        if ($this->httpGet('sub_id_3')) {
+            $query = $query->andWhere('sub_id_3=:param', [':param' => $this->httpGet('sub_id_3')]);
+        }
+        if ($this->httpGet('sub_id_4')) {
+            $query = $query->andWhere('sub_id_4=:param', [':param' => $this->httpGet('sub_id_4')]);
+        }
+        if ($this->httpGet('sub_id_5')) {
+            $query = $query->andWhere('sub_id_5=:param', [':param' => $this->httpGet('sub_id_5')]);
+        }
+        if ($this->httpGet('sub_id_6')) {
+            $query = $query->andWhere('sub_id_6=:param', [':param' => $this->httpGet('sub_id_6')]);
+        }
+        $this->cpas_traks = collect($query->all());
     }
 
 
-
-    public function create()
+    public
+    function create()
     {
         $tizer_tracker_id = $this->httpGet('trackId');
         $source = $this->httpGet('source');
@@ -85,19 +105,20 @@ class CpasStats extends ZFrame
     }
 
 
-    #region CreateStats
-    public function createStats(bool $teaser = false, &$cpas_stream_item_id = null, &$ip = null, &$user_agent=null)
+#region CreateStats
+    public
+    function createStats(bool $teaser = false, &$cpas_stream_item_id = null, &$ip = null, &$user_agent = null)
     {
 
         /*vd(Az::$app->request->userIP);
         vdd(Az::$app->getRequest()->getUserIP());*/
         //vdd($ip);
-        if($ip === null)
+        if ($ip === null)
             $ip = Az::$app->request->userIP;
-        
+
         //vdd($ip);
 
-        if($cpas_stream_item_id === null)
+        if ($cpas_stream_item_id === null)
             $cpas_stream_item_id = ZArrayHelper::getValue($this->httpGet(), 'cpas_stream_item_id');
 
 
@@ -106,13 +127,13 @@ class CpasStats extends ZFrame
         $track = CpasTracker::find()->where(['ip' => $ip])->exists();
 
         if (!empty($track))
-            $item->click ++;
+            $item->click++;
         else
-            $item->uniclick ++;
+            $item->uniclick++;
 
         $item->save();
 
-        if(!$source = ZArrayHelper::getValue($this->httpGet(), 'source')) {
+        if (!$source = ZArrayHelper::getValue($this->httpGet(), 'source')) {
             $source = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
         }
         $value = Az::$app->geo->sypex->getInformationByIp($ip);
@@ -120,8 +141,7 @@ class CpasStats extends ZFrame
         $cpasTrackerStats = new CpasTracker();
         $cpasTrackerStats->cpas_stream_item_id = $cpas_stream_item_id;
         $cpasTrackerStats->user_id = $item->user_id;
-        if($teaser)
-        {
+        if ($teaser) {
             $cpasTrackerStats->ad_campaign_id = ZArrayHelper::getValue($this->httpGet(), 'ad_campaign_id');
             $cpasTrackerStats->cost = ZArrayHelper::getValue($this->httpGet(), 'cost');
             $cpasTrackerStats->currency = ZArrayHelper::getValue($this->httpGet(), 'currency');
@@ -145,12 +165,11 @@ class CpasStats extends ZFrame
         $cpasTrackerStats->lat = ZArrayHelper::getValue($value, 'lat');
         $cpasTrackerStats->lon = ZArrayHelper::getValue($value, 'lon');
         $cpasTrackerStats->ip = $ip;
-        if ($user_agent !== null){
+        if ($user_agent !== null) {
             $cpasTrackerStats->device_model = Az::$app->geo->geodecoder->getModelPhone($user_agent)['device_model'];
             $cpasTrackerStats->device_os = Az::$app->geo->geodecoder->getOs($user_agent);
             $cpasTrackerStats->browser = Az::$app->geo->geodecoder->getBrowser($user_agent);
-        }
-        elseif (isset($_SERVER['HTTP_USER_AGENT'])){
+        } elseif (isset($_SERVER['HTTP_USER_AGENT'])) {
             $cpasTrackerStats->device_model = isset($_SERVER['HTTP_USER_AGENT']) ? Az::$app->geo->geodecoder->getModelPhone($_SERVER['HTTP_USER_AGENT'])['device_model'] : '';
             $cpasTrackerStats->device_os = isset($_SERVER['HTTP_USER_AGENT']) ? Az::$app->geo->geodecoder->getOs($_SERVER['HTTP_USER_AGENT']) : '';
             $cpasTrackerStats->browser = isset($_SERVER['HTTP_USER_AGENT']) ? Az::$app->geo->geodecoder->getBrowser($_SERVER['HTTP_USER_AGENT']) : '';
@@ -159,17 +178,15 @@ class CpasStats extends ZFrame
         $cpasTrackerStats->save();
 
 
-
-
         return $cpasTrackerStats->id;
     }
 
-    ##endregion
+##endregion
 
 
-
-    #region ShopOrder Track
-    public function createCpasTrackForm()
+#region ShopOrder Track
+    public
+    function createCpasTrackForm()
     {
         $return = [];
         $cpasTrack = CpasTeaser::find()->all();
@@ -193,7 +210,8 @@ class CpasStats extends ZFrame
         return $return;
     }
 
-    protected function getByStats($stats, $status)
+    protected
+    function getByStats($stats, $status)
     {
         $count = 0;
         if ($stats->isEmpty())
@@ -206,7 +224,8 @@ class CpasStats extends ZFrame
         return $count;
     }
 
-    protected function getAwait($stats)
+    protected
+    function getAwait($stats)
     {
         $count = 0;
         if (empty($stats))
@@ -225,7 +244,8 @@ class CpasStats extends ZFrame
         return $count;
     }
 
-    protected function getUniqueClick($stats)
+    protected
+    function getUniqueClick($stats)
     {
         $array = [];
         if ($stats->isEmpty())
@@ -238,7 +258,8 @@ class CpasStats extends ZFrame
         return count($array);
     }
 
-    protected function getApprove($stats)
+    protected
+    function getApprove($stats)
     {
         $approve = 0;
         if ($stats->isEmpty())
@@ -254,7 +275,8 @@ class CpasStats extends ZFrame
         return (int)($stats->count() / $approve) * 100;
     }
 
-    protected function getCountByStatus($stats)
+    protected
+    function getCountByStatus($stats)
     {
         $count = 0;
         if ($stats->isEmpty())
@@ -267,9 +289,11 @@ class CpasStats extends ZFrame
         return $count;
     }
 
-    public function getStatsByTime(){
+    public
+    function getStatsByTime()
+    {
         $data = [];
-        foreach ($data as $d){
+        foreach ($data as $d) {
             $item = new StatHistoryForm();
             $item->name = 'ftuhihg';
 
@@ -280,9 +304,11 @@ class CpasStats extends ZFrame
         return $data;
     }
 
-    #endregion
+#endregion
 
-    public function generateStats(){
+    public
+    function generateStats()
+    {
         $return = [];
         $cpasTrack = CpasTeaser::find()->all();
         $i = 0;
@@ -306,20 +332,20 @@ class CpasStats extends ZFrame
     }
 
 
-    //start|JakhongirKudratov
+//start|JakhongirKudratov
 
-    #region Stats
-    public function generateAdminStats()
+#region Stats
+    public
+    function generateAdminStats($users)
     {
-        $users = User::find()->all();
         $data = [];
         foreach ($users as $user) {
             $items = $this->stream_items->where(
                 'user_id', $user->id
             );
-            if(empty($items->toArray()))
+            if (empty($items->toArray()))
                 continue;
-            $items_ids = ZArrayHelper::map($items, 'id', 'id');
+            $items_ids = ZArrayHelper::getColumn($items, 'id');
             $traks = $this->cpas_traks->whereIn(
                 'cpas_stream_item_id', $items_ids
             );
@@ -329,47 +355,51 @@ class CpasStats extends ZFrame
         }
         return $data;
     }
-    public function generateClientStats($user_id ,$filter = []){
-        if (!empty($filter))
-        {
-            if (!empty($filter['selectedBtnValue']))
-            switch ($filter['selectedBtnValue']){
-                case 'time':
-                    return $filter['startdate']? $this->getStatsAllByDay($user_id,$filter['startdate'], $filter['enddate']) :  $this->getStatsAllByDay($user_id);
-                    break;
-                case 'offer':
-                    return $filter['startdate']? $this->getStatsByOffer($user_id, $filter['startdate'], $filter['enddate']) : $this->getStatsByOffer($user_id);
-                    break;
-                case 'stream':
-                    return $filter['startdate']? $this->getStatsByStreams($user_id, $filter['startdate'], $filter['enddate']) : $this->getStatsByStreams($user_id);
-                    break;
-                case 'lands':
-                    return $filter['startdate']? $this->getStatsByLands($user_id, 'cpas_land_id',$filter['startdate'], $filter['enddate']) : $this->getStatsByLands($user_id, 'cpas_land_id');
-                    break;
-                case 'prelands':
-                    return $filter['startdate']? $this->getStatsByLands($user_id, 'cpas_trans',$filter['startdate'], $filter['enddate']) : $this->getStatsByLands($user_id, 'cpas_trans');
-                    break;
 
-                case 'preland_with_form':
-                    return $filter['startdate']? $this->getStatsByLands($user_id, 'cpas_trans_form',$filter['startdate'], $filter['enddate']) : $this->getStatsByLands($user_id, 'cpas_trans_form');
-                    break;
-                case 'country':
-                    return $filter['startdate']? $this->getStatsByCountries($user_id ,$filter['startdate'], $filter['enddate']) : $this->getStatsByCountries($user_id);
-                    break;
-                case 'device':
-                    return $filter['startdate']? $this->getStatsByDevices($user_id, $filter['startdate'], $filter['enddate']) : $this->getStatsByDevices($user_id);
-                    break;
-                default:
-                    return $filter['startdate']? $this->getStatsAllByDay($user_id ,$filter['startdate'], $filter['enddate']) : $this->getStatsAllByDay($user_id);
-                    break;
-            }
-            return ZArrayHelper::getValue($filter, 'startdate')? $this->getStatsAllByDay($user_id ,$filter['startdate'], $filter['enddate']) : $this->getStatsAllByDay($user_id);
+    public
+    function generateClientStats($user_id, $filter = [])
+    {
+        if (!empty($filter)) {
+            if (!empty($filter['selectedBtnValue']))
+                switch ($filter['selectedBtnValue']) {
+                    case 'time':
+                        return $filter['startdate'] ? $this->getStatsAllByDay($user_id, $filter['startdate'], $filter['enddate']) : $this->getStatsAllByDay($user_id);
+                        break;
+                    case 'offer':
+                        return $filter['startdate'] ? $this->getStatsByOffer($user_id, $filter['startdate'], $filter['enddate']) : $this->getStatsByOffer($user_id);
+                        break;
+                    case 'stream':
+                        return $filter['startdate'] ? $this->getStatsByStreams($user_id, $filter['startdate'], $filter['enddate']) : $this->getStatsByStreams($user_id);
+                        break;
+                    case 'lands':
+                        return $filter['startdate'] ? $this->getStatsByLands($user_id, 'cpas_land_id', $filter['startdate'], $filter['enddate']) : $this->getStatsByLands($user_id, 'cpas_land_id');
+                        break;
+                    case 'prelands':
+                        return $filter['startdate'] ? $this->getStatsByLands($user_id, 'cpas_trans', $filter['startdate'], $filter['enddate']) : $this->getStatsByLands($user_id, 'cpas_trans');
+                        break;
+                    case 'preland_with_form':
+                        return $filter['startdate'] ? $this->getStatsByLands($user_id, 'cpas_trans_form', $filter['startdate'], $filter['enddate']) : $this->getStatsByLands($user_id, 'cpas_trans_form');
+                        break;
+                    case 'country':
+                        return $filter['startdate'] ? $this->getStatsByCountries($user_id, $filter['startdate'], $filter['enddate']) : $this->getStatsByCountries($user_id);
+                        break;
+                    case 'device':
+                        return $filter['startdate'] ? $this->getStatsByDevices($user_id, $filter['startdate'], $filter['enddate']) : $this->getStatsByDevices($user_id);
+                        break;
+                    case 'sub':
+                        return $this->getStatsBySubs($user_id);
+                        break;
+                    default:
+                        return $filter['startdate'] ? $this->getStatsAllByDay($user_id, $filter['startdate'], $filter['enddate']) : $this->getStatsAllByDay($user_id);
+                        break;
+                }
+            return ZArrayHelper::getValue($filter, 'startdate') ? $this->getStatsAllByDay($user_id, $filter['startdate'], $filter['enddate']) : $this->getStatsAllByDay($user_id);
         }
         return $this->getStatsAllByDay($user_id);
     }
-    #endregion
-    #region getStatsAllByDay
 
+#endregion
+#region getStatsAllByDay
     public function getStatsAllByDay($user_id, $stratTime = null, $endTime = null)
     {
         $streams = CpasStream::find()
@@ -377,22 +407,26 @@ class CpasStats extends ZFrame
                 'user_id' => $user_id
             ])
             ->all();
-        $stream_ids = ZArrayHelper::map($streams, 'id', 'id');
+        $stream_ids = ZArrayHelper::getColumn($streams, 'id');
         $stream_items = CpasStreamItem::find()
             ->where([
                 'cpas_stream_id' => $stream_ids
             ])
             ->all();
-        $ids = ZArrayHelper::map($stream_items, 'id', 'id');
-        $cpasTracker = collect(CpasTracker::find()
+        $ids = ZArrayHelper::getColumn($stream_items, 'id');
+        $cpasTrackerQuery = CpasTracker::find()
             ->where([
                 'cpas_stream_item_id' => $ids
             ])
-            ->orderBy('created_at asc')->all());
+            ->orderBy('created_at asc');
+
+        $cpasTracker = collect($cpasTrackerQuery->all());
+
         if (!$cpasTracker->count())
             return [];
+
         $first = $cpasTracker->first();
-        $lastday = date('Y-m-d', strtotime($first->created_at .' -1 day'));
+        $lastday = date('Y-m-d', strtotime($first->created_at . ' -1 day'));
         $day = date('Y-m-d');
         if ($endTime)
             $day = $endTime;
@@ -400,14 +434,13 @@ class CpasStats extends ZFrame
             $lastday = $stratTime;
         $toDay = 0;
         $data = [];
-        $days = $this->daysBetween($lastday,$day);
+        $days = $this->daysBetween($lastday, $day);
         if ($lastday === $day)
             $days = 1;
-        for($i = 1; $i <= $days; $i++)
-        {
-            $current_day = date('Y-m-d', strtotime($day .' -'.$toDay.' day'));
-            $orderByDay = $cpasTracker->where('created_at', '<=' ,$current_day. ' 23:59:59')->where('created_at', '>=' ,$current_day. ' 00:00:00');
-            $toDay ++;
+        for ($i = 1; $i <= $days; $i++) {
+            $current_day = date('Y-m-d', strtotime($day . ' -' . $toDay . ' day'));
+            $orderByDay = $cpasTracker->where('created_at', '<=', $current_day . ' 23:59:59')->where('created_at', '>=', $current_day . ' 00:00:00');
+            $toDay++;
             if (empty($orderByDay->toArray()))
                 continue;
             $datas = $this->generateForm($orderByDay, 'day', $current_day);
@@ -417,20 +450,70 @@ class CpasStats extends ZFrame
         return $data;
     }
 
-    #endregion
-    #region daysBetween
+#endregion
+    public function getStatsBySubs($user_id)
+    {
 
-    public function daysBetween($stratTime, $enddata) {
+        $cpasTrackerQuery = CpasTracker::find()
+            ->where([
+                'user_id' => $user_id
+            ])
+            ->orderBy('created_at asc');
+
+        $startDate = $this->httpGet('startdate');
+        $endDate = $this->httpGet('enddate');
+        if($startDate){
+            $cpasTrackerQuery = $cpasTrackerQuery->andWhere(['between', 'created_at', $startDate. ' 00:00:00', $endDate .' 23:59:59' ]);
+        }
+        if($this->httpGet('selectedSub')){
+            $val = $this->httpGet('selectedSub');
+            $cpasTracker = collect($cpasTrackerQuery->andWhere("$val IS NOT NULL")->asArray()->all())->groupBy($val);
+        }else{
+            $cpasTracker = collect($cpasTrackerQuery->andWhere("sub_id_1 IS NOT NULL")->asArray()->all())->groupBy('sub_id_1');
+        }
+
+        $data = [];
+        if (!$this->emptyOrNullable($cpasTracker)) {
+            foreach ($cpasTracker as $key => $item) {
+                $item = collect($item);
+                $orders = $item->where('shop_order_id', '!=', null);
+                $accepts = $orders->where('status', 'accept');
+                $form = new CpasTrackForm();
+                $form->approve = '0%';
+                $form->sub = $key;
+                $form->click = count($item->groupBy('ip'));
+                $form->unique_click = count($item);
+                $form->all = count($orders);
+                $form->confirmed = count($orders->where('status', 'accept'));
+                $form->trash = count($orders->where('status', 'trash'));
+                $form->canceled = count($orders->where('status', 'cancel'));
+                $form->await = count($orders->where('status', 'new'));
+                $form->cr = round(($form->all / $form->click * 100), 2) . ' %';
+                $form->Valid = abs($form->all - $form->trash);
+                $form->earned_money = Az::$app->cpas->cpasStats->generateEarnedMoney(ZArrayHelper::getColumn($accepts, 'id'));
+                $new_valid = $form->Valid - $form->await;
+                if ($new_valid !== 0) {
+                    $form->approve = round(($form->confirmed / $new_valid) * 100, 2) . ' %';
+                }
+                $form->EPC = round(($form->earned_money * $form->confirmed / $form->click), 2);
+                $data[] = $form;
+            }
+        }
+        return $data;
+    }
+
+#region daysBetween
+
+    public function daysBetween($stratTime, $enddata)
+    {
         return (int)date_diff(
             date_create($stratTime),
             date_create($enddata)
         )->format('%a');
     }
 
-    #endregion
-    #region getStatsByOffer
-
-
+#endregion
+#region getStatsByOffer
     public function getStatsByOffer($user_id, $startTime = null, $endTime = null)
     {
         $streams = collect(CpasStream::find()
@@ -446,9 +529,8 @@ class CpasStats extends ZFrame
             ->all();
         $data = [];
         if ($startTime)
-            $startTime = date('Y-m-d', strtotime($startTime .' -1 day'));
-        foreach ($offers as $offer)
-        {
+            $startTime = date('Y-m-d', strtotime($startTime . ' -1 day'));
+        foreach ($offers as $offer) {
             $streamByOffers = $streams->where(
                 'cpas_offer_id', $offer->id
             );
@@ -459,17 +541,16 @@ class CpasStats extends ZFrame
             $accept = 0;
             $earned_money = 0;
             $allIds = [];
-            foreach ($streamByOffers as $stream)
-            {
+            foreach ($streamByOffers as $stream) {
                 $items = $this->stream_items->where(
                     'cpas_stream_id', $stream->id
                 )->all();
-                if (!empty($items)){
+                if (!empty($items)) {
                     $ids = ZArrayHelper::map($items, 'id', 'id');
                     $allIds = ZArrayHelper::merge($allIds, $ids);
                     $traks = $this->cpas_traks->whereIn(
                         'cpas_stream_item_id', $ids
-                    )->where('created_at', '<=' ,$endTime. '23:59:59')->where('created_at', '>' ,$startTime. '00:00:00');
+                    )->where('created_at', '<=', $endTime . '23:59:59')->where('created_at', '>', $startTime . '00:00:00');
                     $notEmpty = $traks->whereNotNull('contact_name');
                     if (empty($notEmpty->toArray()))
                         continue;
@@ -480,7 +561,7 @@ class CpasStats extends ZFrame
                     $new += $notEmpty->where('status', 'new')->count();
                     $accepts = $notEmpty->where('status', 'accept');
                     $accept_1 = $notEmpty->where('status', 'accept')->count();
-                    $cancel = $notEmpty->where('status' , 'cancel')->count();
+                    $cancel = $notEmpty->where('status', 'cancel')->count();
                     $accept_ids = ZArrayHelper::map($accepts, 'id', 'cpas_stream_item_id');
                     $earned_money_1 = 0;
                     if ($accept_1 !== 0)
@@ -491,7 +572,7 @@ class CpasStats extends ZFrame
             }
             $traksAll = $this->cpas_traks->whereIn(
                 'cpas_stream_item_id', $allIds
-            )->where('created_at', '<=' ,$endTime. '23:59:59')->where('created_at', '>' ,$startTime. '00:00:00');
+            )->where('created_at', '<=', $endTime . '23:59:59')->where('created_at', '>', $startTime . '00:00:00');
             $trackGroup = $traksAll->groupBy('ip');
             $click = count($trackGroup);
             $notEmpty = $traksAll->whereNotNull('contact_name');
@@ -503,7 +584,7 @@ class CpasStats extends ZFrame
             $stats->approve = 0 . ' %';
             if ($click === 0)
                 continue;
-            if (empty($notEmpty->toArray())){
+            if (empty($notEmpty->toArray())) {
                 $data [] = $stats;
                 continue;
             }
@@ -513,21 +594,19 @@ class CpasStats extends ZFrame
             $stats->trash = $trash;
             $stats->confirmed = $accept;
             $stats->earned_money = $earned_money;
-            $stats->cr = round(($stats->all/$stats->click*100), 2). ' %';
+            $stats->cr = round(($stats->all / $stats->click * 100), 2) . ' %';
             $stats->Valid = abs($stats->all - $stats->trash);
             $new_valid = $stats->Valid - $stats->await;
-            if ($new_valid !== 0){
-                $stats->approve = round(($stats->confirmed/$new_valid)*100, 2). ' %';
+            if ($new_valid !== 0) {
+                $stats->approve = round(($stats->confirmed / $new_valid) * 100, 2) . ' %';
             }
-            $stats->EPC = round(($stats->earned_money*$stats->confirmed/$stats->click), 2);
+            $stats->EPC = round(($stats->earned_money * $stats->confirmed / $stats->click), 2);
             $data[] = $stats;
         }
         return $data;
     }
-
-    #endregion
-    #region getStatsByLands
-
+#endregion
+#region getStatsByLands
     public function getStatsByLands($user_id, string $attr = null, $startTime = null, $endTime = null)
     {
         $streams = collect(CpasStream::find()
@@ -538,7 +617,7 @@ class CpasStats extends ZFrame
 
         $stream_ids = ZArrayHelper::map($streams, 'id', 'id');
         $items_all = $this->stream_items->whereIn(
-            'cpas_stream_id' , $stream_ids
+            'cpas_stream_id', $stream_ids
         );
 
         $land_ids = array_filter(ZArrayHelper::map($items_all, $attr, $attr));
@@ -552,9 +631,8 @@ class CpasStats extends ZFrame
         $data = [];
 
         if ($startTime)
-            $startTime = date('Y-m-d', strtotime($startTime .' -1 day'));
-        foreach ($cpas_lands as $land)
-        {
+            $startTime = date('Y-m-d', strtotime($startTime . ' -1 day'));
+        foreach ($cpas_lands as $land) {
             $items = $items_all->where(
                 $attr, $land->id
             )
@@ -562,12 +640,12 @@ class CpasStats extends ZFrame
                     'user_id', $user_id
                 )
                 ->all();
-            if (!empty($items)){
+            if (!empty($items)) {
 
                 $ids = ZArrayHelper::map($items, 'id', 'id');
                 $traks = $this->cpas_traks->whereIn(
                     'cpas_stream_item_id', $ids
-                )->where('created_at', '<=' ,$endTime. '23:59:59')->where('created_at', '>' ,$startTime. '00:00:00');
+                )->where('created_at', '<=', $endTime . '23:59:59')->where('created_at', '>', $startTime . '00:00:00');
 
 
                 $datas = $this->generateForm($traks, 'land', $land->title);
@@ -584,9 +662,8 @@ class CpasStats extends ZFrame
         return $data;
 
     }
-
-    #endregion
-    #region getStatsByDevices
+#endregion
+#region getStatsByDevices
 
     public function getStatsByDevices($user_id, $startTime = null, $endTime = null)
     {
@@ -612,12 +689,11 @@ class CpasStats extends ZFrame
         ];
         $data = [];
         if ($startTime)
-            $startTime = date('Y-m-d', strtotime($startTime .' -1 day'));
-        foreach ($types as $key => $type)
-        {
+            $startTime = date('Y-m-d', strtotime($startTime . ' -1 day'));
+        foreach ($types as $key => $type) {
             $traks = $this->cpas_traks->whereIn(
                 'id', $check[$key]
-            )->where('created_at', '<=' ,$endTime. '23:59:59')->where('created_at', '>' ,$startTime. '00:00:00');
+            )->where('created_at', '<=', $endTime . '23:59:59')->where('created_at', '>', $startTime . '00:00:00');
 
             $datas = $this->generateForm($traks, 'device', $type);
             if ($datas !== null)
@@ -625,8 +701,9 @@ class CpasStats extends ZFrame
         }
         return $data;
     }
-    #endregion
-    #region checkDevice
+
+#endregion
+#region checkDevice
 
     public function checkDevice($traks)
     {
@@ -640,9 +717,8 @@ class CpasStats extends ZFrame
             'BlackBerry',
             'Mobile'
         ];
-        foreach ($traks as $trak)
-        {
-            if (in_array($trak->device_os ,$mobiles))
+        foreach ($traks as $trak) {
+            if (in_array($trak->device_os, $mobiles))
                 $mobile_ids[] = $trak->id;
 
             else
@@ -653,8 +729,9 @@ class CpasStats extends ZFrame
             'desktop' => $desktop_ids
         ];
     }
-    #endregion
-    #region getStatsByStreams
+
+#endregion
+#region getStatsByStreams
 
     public function getStatsByStreams($user_id, $startTime = null, $endTime = null)
     {
@@ -665,17 +742,16 @@ class CpasStats extends ZFrame
             ->all());
         $data = [];
         if ($startTime)
-            $startTime = date('Y-m-d', strtotime($startTime .' -1 day'));
-        foreach ($streams as $stream)
-        {
+            $startTime = date('Y-m-d', strtotime($startTime . ' -1 day'));
+        foreach ($streams as $stream) {
             $items = $this->stream_items->where(
                 'cpas_stream_id', $stream->id
             )->all();
-            if (!empty($items)){
+            if (!empty($items)) {
                 $ids = ZArrayHelper::map($items, 'id', 'id');
                 $traks = $this->cpas_traks->whereIn(
                     'cpas_stream_item_id', $ids
-                )->where('created_at', '<=' ,$endTime. '23:59:59')->where('created_at', '>' ,$startTime. '00:00:00');
+                )->where('created_at', '<=', $endTime . '23:59:59')->where('created_at', '>', $startTime . '00:00:00');
                 $datas = $this->generateForm($traks, 'stream', $stream->title);
                 if ($datas !== null)
                     $data [] = $datas;
@@ -683,8 +759,9 @@ class CpasStats extends ZFrame
         }
         return $data;
     }
-    #endregion
-    #region getStatsByCountries
+
+#endregion
+#region getStatsByCountries
 
     public function getStatsByCountries($user_id, $startTime = null, $endTime = null)
     {
@@ -695,7 +772,7 @@ class CpasStats extends ZFrame
             ])
             ->all());
         $stream_ids = ZArrayHelper::map($streams, 'id', 'id');
-        $stream_items =$this->stream_items->whereIn(
+        $stream_items = $this->stream_items->whereIn(
             'cpas_stream_id', $stream_ids
         )
             ->where(
@@ -703,14 +780,13 @@ class CpasStats extends ZFrame
             );
         $ids = ZArrayHelper::map($stream_items, 'id', 'id');
         if ($startTime)
-            $startTime = date('Y-m-d', strtotime($startTime .' -1 day'));
+            $startTime = date('Y-m-d', strtotime($startTime . ' -1 day'));
 
         $traks = $this->cpas_traks->whereIn(
             'cpas_stream_item_id', $ids
-        )->where('created_at', '<=' ,$endTime. '23:59:59')->where('created_at', '>' ,$startTime. '00:00:00')->groupBy('country');
+        )->where('created_at', '<=', $endTime . '23:59:59')->where('created_at', '>', $startTime . '00:00:00')->groupBy('country');
         $data = [];
-        foreach ($traks as $key => $trackGroup)
-        {
+        foreach ($traks as $key => $trackGroup) {
             $country_name = $countries->where(
                 'alpha2', $key
             )->first();
@@ -726,8 +802,9 @@ class CpasStats extends ZFrame
         }
         return $data;
     }
-    #endregion
-    #region generateForm
+
+#endregion
+#region generateForm
 
     public function generateForm($cpasTracker, $attr, $val = null)
     {
@@ -742,7 +819,7 @@ class CpasStats extends ZFrame
         $cpasStats->unique_click = $cpasTracker->count() - $click;
         $cpasStats->approve = '0 %';
         $cpasStats->cr = '0 %';
-        if (empty($notEmpty->toArray())){
+        if (empty($notEmpty->toArray())) {
             return $cpasStats;
         }
         $trash = $notEmpty->where('status', 'trash')->count();
@@ -762,30 +839,31 @@ class CpasStats extends ZFrame
             $cpasStats->earned_money = $this->generateEarnedMoney($accept_ids);
 
         $cr = 0;
-        $approve= 0;
+        $approve = 0;
         $epc = 0;
         $cpasStats->Valid = $cpasStats->all - $cpasStats->trash;
-        if ($cpasStats->all){
-            $cr = round(($cpasStats->all/$cpasStats->click)*100, 2);
-            $epc = round($cpasStats->earned_money*$cpasStats->confirmed/$cpasStats->click, 2);
+        if ($cpasStats->all) {
+            $cr = round(($cpasStats->all / $cpasStats->click) * 100, 2);
+            $epc = round($cpasStats->earned_money * $cpasStats->confirmed / $cpasStats->click, 2);
             $valid_new = $cpasStats->Valid - $cpasStats->await;
             if ($valid_new !== 0)
-                $approve = round(($confirmed/$valid_new)*100, 2);
+                $approve = round(($confirmed / $valid_new) * 100, 2);
         }
-        $cpasStats->approve = $approve. ' %';
-        $cpasStats->cr = $cr. ' %';
+        $cpasStats->approve = $approve . ' %';
+        $cpasStats->cr = $cr . ' %';
         $cpasStats->EPC = $epc;
         return $cpasStats;
     }
-    #endregion
 
-    #region generateEarnedMoney
+#endregion
 
-    public function generateEarnedMoney(array $ids)
+#region generateEarnedMoney
+
+    public
+    function generateEarnedMoney(array $ids)
     {
         $amount = 0;
-        foreach ($ids as $id)
-        {
+        foreach ($ids as $id) {
             $item = CpasStreamItem::findOne($id);
 
             if (!empty($item->cpas_land_id))
@@ -795,8 +873,7 @@ class CpasStats extends ZFrame
                 $land = CpasLand::findOne($item->cpas_trans_form);
 
 
-            if(!empty($land))
-            {
+            if (!empty($land)) {
                 $offer_item = CpasOfferItem::findOne($land->cpas_offer_item_id);
                 if (!empty($offer_item))
                     $amount += $offer_item->pay;
@@ -806,17 +883,14 @@ class CpasStats extends ZFrame
         return $amount;
     }
 
-    #endregion
+#endregion
 
-    //end|JakhongirKudratov
-
-
+//end|JakhongirKudratov
 
 
-
-
-    #region generateClicks
-    public function generateClicks($id)
+#region generateClicks
+    public
+    function generateClicks($id)
     {
         $items = CpasStreamItem::find()
             ->where([
@@ -824,17 +898,18 @@ class CpasStats extends ZFrame
             ])
             ->all();
         $clicks = 0;
-        foreach ($items as $item)
-        {
+        foreach ($items as $item) {
             $clicks += $item->click;
         }
         return $clicks;
     }
-    #endregion
+
+#endregion
 
 
-    #region generateClicks
-    public function generateUniClicks($id)
+#region generateClicks
+    public
+    function generateUniClicks($id)
     {
         $items = CpasStreamItem::find()
             ->where([
@@ -842,19 +917,19 @@ class CpasStats extends ZFrame
             ])
             ->all();
         $clicks = 0;
-        foreach ($items as $item)
-        {
+        foreach ($items as $item) {
             $clicks += $item->uniclick;
         }
         return $clicks;
     }
-    #endregion
+
+#endregion
 
 
+#region generateByStatus
 
-    #region generateByStatus
-
-    public function generateByStatus($item_id, $status)
+    public
+    function generateByStatus($item_id, $status)
     {
         $tracks = CpasTracker::find()
             ->where([
@@ -864,15 +939,17 @@ class CpasStats extends ZFrame
                 'status' => $status
             ])
             ->count();
-        if(!$tracks)
+        if (!$tracks)
             return 0;
         return $tracks;
     }
-    #endregion
 
-    #region generateAproove
+#endregion
 
-    public function generateAproove($item_id, $click)
+#region generateAproove
+
+    public
+    function generateAproove($item_id, $click)
     {
         $aprove = CpasTracker::find()
             ->where([
@@ -884,18 +961,20 @@ class CpasStats extends ZFrame
             ->count();
         if (!$aprove || $aprove === 0)
             return 0;
-        if($click === 0)
+        if ($click === 0)
             return 0;
-        $return = round(($aprove/$click)*100, 2);
+        $return = round(($aprove / $click) * 100, 2);
         return $return;
 
 
     }
-    #endregion
+
+#endregion
 
 
-    #region generateEnrolled
-    public function generateEnrolled($item)
+#region generateEnrolled
+    public
+    function generateEnrolled($item)
     {
         $tracks = CpasTracker::find()
             ->where([
@@ -914,12 +993,12 @@ class CpasStats extends ZFrame
         if (!empty($item->cpas_trans_form))
             $land = CpasLand::findOne($item->cpas_trans_form);
 
-        if(!$land)
+        if (!$land)
             return 0;
-        else{
+        else {
             $offer_item = CpasOfferItem::findOne($land->cpas_offer_item_id);
             $money = $offer_item->pay;
-            $return = $money*$tracks;
+            $return = $money * $tracks;
             //vdd($tracks);
             return $return;
 
@@ -928,20 +1007,22 @@ class CpasStats extends ZFrame
 
     }
 
-    #endregion
+#endregion
 
-    #region generateExpected
+#region generateExpected
 
-    public function generateExpected($item_id)
+    public
+    function generateExpected($item_id)
     {
         return 0;
     }
 
-    #endregion
+#endregion
 
-    #region generateAllStatus
+#region generateAllStatus
 
-    public function generateAllStatus($item_id)
+    public
+    function generateAllStatus($item_id)
     {
         $tracks = CpasTracker::find()
             ->where([
@@ -956,11 +1037,13 @@ class CpasStats extends ZFrame
 
 
     }
-    #endregion
-    
-    #region generateClientUniClicks
 
-    public function generateClientUniClicks(array $ids, $attr)
+#endregion
+
+#region generateClientUniClicks
+
+    public
+    function generateClientUniClicks(array $ids, $attr)
     {
         $click = 0;
         $cpasStreamItems = CpasStreamItem::find()
@@ -971,48 +1054,77 @@ class CpasStats extends ZFrame
         if (empty($cpasStreamItems))
             return $click;
 
-        foreach ($cpasStreamItems as $item)
-        {
+        foreach ($cpasStreamItems as $item) {
             $click += (int)$item->$attr;
         }
 
         return $click;
     }
 
-    #endregion
-    #region Test
+#endregion
+#region Test
 
 
-    public function test()
+    public
+    function test()
     {
         $cpasTracker = collect(CpasTracker::find()->orderBy('created_at asc')->all());
 
         vdd($cpasTracker);
     }
 
-    #endregion
+#endregion
 
-    #region getAllOffersbyName
+#region getAllOffersbyName
 
-    public function getAllOffersbyName()
+    public
+    function getAllOffersbyName()
     {
         $all = CpasOffer::find()->all();
         $data = [];
 
-        foreach ($all as $value)
-        {
+        foreach ($all as $value) {
             $data[$value->title] = $value->title;
         }
 
         return $data;
     }
 
-    #endregion
+#endregion
+    public function getAllSubs(){
+        $streams = CpasStream::find()
+            ->where([
+                'user_id' => $this->userIdentity()->id
+            ])->all();
+        $stream_ids = ZArrayHelper::getColumn($streams, 'id');
+        $stream_items = CpasStreamItem::find()
+            ->where([
+                'cpas_stream_id' => $stream_ids
+            ])
+            ->all();
+        $ids = ZArrayHelper::getColumn($stream_items, 'id');
+        $cpasTrackerQuery = CpasTracker::find()
+            ->where([
+                'cpas_stream_item_id' => $ids
+            ])
+            ->orderBy('created_at asc');
+        if($this->httpGet('selectedSub')){
+            $val = $this->httpGet('selectedSub');
+            $cpasTracker = collect($cpasTrackerQuery->andWhere("$val IS NOT NULL")->asArray()->all())->groupBy($val);
+        }else{
+            $cpasTracker = collect($cpasTrackerQuery->andWhere("sub_id_1 IS NOT NULL")->asArray()->all())->groupBy('sub_id_1');
+        }
+        $data = [];
+        foreach ($cpasTracker as $key => $item){
+            $data[$key] = $key;
+        }
+        return $data;
+    }
 
+#region getStatsByCountriesOld
 
-    #region getStatsByCountriesOld
-
-    public function getStatsByCountriesOld($startTime = null, $endTime = null)
+    public
+    function getStatsByCountriesOld($startTime = null, $endTime = null)
     {
         $user_id = $this->userIdentity()->id;
         $countries = collect(PlaceCountry::find()->all());
@@ -1023,7 +1135,7 @@ class CpasStats extends ZFrame
             ->all());
         $stream_ids = ZArrayHelper::map($streams, 'id', 'id');
         //vdd($stream_ids);
-        $stream_items_1 =$this->stream_items->whereIn(
+        $stream_items_1 = $this->stream_items->whereIn(
             'cpas_stream_id', $stream_ids
         )
             ->where(
@@ -1034,7 +1146,7 @@ class CpasStats extends ZFrame
         $land_ids = array_filter(ZArrayHelper::map($stream_items_1, 'cpas_land_id', 'cpas_land_id'));
         $trans_ids = array_filter(ZArrayHelper::map($stream_items_1, 'cpas_trans', 'cpas_trans'));
         $trans_form_ids = array_filter(ZArrayHelper::map($stream_items_1, 'cpas_trans_form', 'cpas_trans_form'));
-        $all_ids = array_unique(ZArrayHelper::merge($land_ids, $trans_ids,$trans_form_ids));
+        $all_ids = array_unique(ZArrayHelper::merge($land_ids, $trans_ids, $trans_form_ids));
         $lands = collect(CpasLand::find()
             ->where([
                 'id' => $all_ids
@@ -1042,19 +1154,18 @@ class CpasStats extends ZFrame
             ->all());
         //vdd($lands);
 
-        $country_ids =array_unique(ZArrayHelper::map($lands, 'id', 'place_country_id'));
+        $country_ids = array_unique(ZArrayHelper::map($lands, 'id', 'place_country_id'));
         //vdd($country_ids);
         $data = [];
         if ($startTime)
-            $startTime = date('Y-m-d', strtotime($startTime .' -1 day'));
+            $startTime = date('Y-m-d', strtotime($startTime . ' -1 day'));
 
 
-        foreach ($country_ids as $c_id)
-        {
+        foreach ($country_ids as $c_id) {
             $land_by_country = $lands->whereIn('place_country_id', $c_id);
             $all = 0;
             $click = 0;
-            $approve= 0;
+            $approve = 0;
             $trash = 0;
             $new = 0;
             $cancel = 0;
@@ -1064,9 +1175,8 @@ class CpasStats extends ZFrame
             $allIds = [];
             vd($land_by_country);
 
-            foreach ($land_by_country as $land)
-            {
-                $items = $this->stream_items->filter(function ($value, $key) use ($land,$user_id) {
+            foreach ($land_by_country as $land) {
+                $items = $this->stream_items->filter(function ($value, $key) use ($land, $user_id) {
                     if (($value->cpas_land_id == $land->id || $value->cpas_trans === $land->id || $value->cpas_trans_form === $land->id) && $value->user_id == $user_id)
                         return $value;
                 })->all();
@@ -1081,17 +1191,17 @@ class CpasStats extends ZFrame
                         'user_id', $user_id
                      )
                      ->all();
-
+    
                  vd('item');
                  vd($items);*/
 
-                if (!empty($items)){
+                if (!empty($items)) {
 
                     $ids = ZArrayHelper::map($items, 'id', 'id');
                     vd($ids);
                     $traks = $this->cpas_traks->whereIn(
                         'cpas_stream_item_id', $ids
-                    )->where('created_at', '<=' ,$endTime. '23:59:59')->where('created_at', '>' ,$startTime. '00:00:00');
+                    )->where('created_at', '<=', $endTime . '23:59:59')->where('created_at', '>', $startTime . '00:00:00');
 
                     $item_ids = ZArrayHelper::map($traks, 'id', 'cpas_stream_item_id');
                     vd($item_ids);
@@ -1103,7 +1213,7 @@ class CpasStats extends ZFrame
                     $accepts = $traks->where('status', 'accept');
 
                     $accept_1 = $traks->where('status', 'accept')->count();
-                    $cancel = $traks->where('status' , 'cancel')->count();
+                    $cancel = $traks->where('status', 'cancel')->count();
                     $accept_ids = ZArrayHelper::map($accepts, 'cpas_stream_item_id', 'cpas_stream_item_id');
                     $unique_click_1 = $this->generateClientUniClicks($item_ids, 'uniclick');
                     $earned_money_1 = 0;
@@ -1112,8 +1222,8 @@ class CpasStats extends ZFrame
                         $earned_money_1 = $this->generateEarnedMoney($accept_ids);
 
 
-                    if ($click_1 !== 0){
-                        $approve += round(($accept_1/$click_1)*100, 2);
+                    if ($click_1 !== 0) {
+                        $approve += round(($accept_1 / $click_1) * 100, 2);
 
                     }
 
@@ -1125,13 +1235,11 @@ class CpasStats extends ZFrame
                 }
 
 
-
-
             }
 
             $traksAll = $this->cpas_traks->whereIn(
                 'cpas_stream_item_id', $allIds
-            )->where('created_at', '<=' ,$endTime. '23:59:59')->where('created_at', '>' ,$startTime. '00:00:00');
+            )->where('created_at', '<=', $endTime . '23:59:59')->where('created_at', '>', $startTime . '00:00:00');
 
             if ($click === 0)
                 continue;
@@ -1146,10 +1254,10 @@ class CpasStats extends ZFrame
             $stats->confirmed = $accept;
             $stats->unique_click = $unique_click;
             $stats->earned_money = $earned_money;
-            $stats->approve = $approve. ' %';
-            $stats->cr = $this->generateCr($traksAll). ' %';
+            $stats->approve = $approve . ' %';
+            $stats->cr = $this->generateCr($traksAll) . ' %';
             $stats->Valid = $click - $unique_click;
-            $epc = round($earned_money/($all), 2);
+            $epc = round($earned_money / ($all), 2);
             $stats->EPC = $epc;
             //vd($stats);
             $data[] = $stats;
@@ -1162,23 +1270,23 @@ class CpasStats extends ZFrame
                     'cpas_land_id', $land->id
                 )
                 ->all();
-
+    
             $items_1 = $this->stream_items->filter(function ($value, $key) use ($land) {
                 if ($value->cpas_land_id === $land->id || $value->cpas_trans === $land->id || $value->cpas_trans_form === $land->id)
                     return $value;
             });
             vd($items_1);
-
+    
             if (!empty($items)){
-
+    
                 $ids = ZArrayHelper::map($items, 'id', 'id');
                 $traks = $this->cpas_traks->whereIn(
                     'cpas_stream_item_id', $ids
                 );
-
+    
                 if ($traks->count() === 0)
                     continue;
-
+    
                 $item_ids = ZArrayHelper::map($traks, 'cpas_stream_item_id', 'cpas_stream_item_id');
                 $trash = $traks->where('status', 'trash')->count();
                 $new = $traks->where('status', 'new')->count();
@@ -1187,7 +1295,7 @@ class CpasStats extends ZFrame
                 $accept_ids = ZArrayHelper::map($accepts, 'cpas_stream_item_id', 'cpas_stream_item_id');
                 $cancel = $traks->where('status' , 'cancel')->count();
                 $country = $countries->where('id', $land->place_country_id)->first();
-
+    
                 $stats = new CpasTrackForm();
                 $stats->country =$country->name;
                 $stats->click = $traks->count();
@@ -1200,7 +1308,7 @@ class CpasStats extends ZFrame
                 $stats->earned_money = 0;
                 if ($accept !== 0)
                     $stats->earned_money = $this->generateEarnedMoney($accept_ids);
-
+    
                 $cr = 0;
                 $approve= 0;
                 $epc = 0;
@@ -1208,48 +1316,49 @@ class CpasStats extends ZFrame
                     $cr = round(($stats->unique_click/$stats->click)*100, 2);
                     $approve = round(($stats->confirmed/$stats->click)*100, 2);
                     $epc = round($stats->earned_money/$stats->click, 2);
-
+    
                 }
                 $stats->approve = $approve. ' %';
                 $stats->cr = $cr. ' %';
                 $stats->Valid = $stats->click - $stats->unique_click;
                 $stats->EPC = $epc;
                 $data[] = $stats;
-
+    
             };
-
-
+    
+    
         }*/
 
         return $data;
     }
 
-    #endregion
+#endregion
 
-    #region generateCr
+#region generateCr
 
-    public function generateCr($traks)
+    public
+    function generateCr($traks)
     {
         $count = $traks->count();
-        $notOrdered = $traks->filter(function ($value, $key){
-            if(!empty($value->contact_phone) || !empty($value->contact_name))
+        $notOrdered = $traks->filter(function ($value, $key) {
+            if (!empty($value->contact_phone) || !empty($value->contact_name))
                 return null;
             return $value;
         })->count();
 
         $orderedCount = $count - $notOrdered;
-        if (!empty($count)){
-            return round(($orderedCount/$count)*100, 2);
-        }
-        else
+        if (!empty($count)) {
+            return round(($orderedCount / $count) * 100, 2);
+        } else
             return 0;
     }
 
-    #endregion
-    #region old
+#endregion
+#region old
 
 
-    public function generateAdminStatsOld()
+    public
+    function generateAdminStatsOld()
     {
         $users = User::find()->all();
         $data = [];
@@ -1273,8 +1382,8 @@ class CpasStats extends ZFrame
                     $stats->user = $user->email;
                     $stats->stream = $stream->title;
                     $stats->stream_item = $item->title;
-                    $stats->click = $item->click ? $item->click : 0 ;
-                    $stats->unique_click = $item->uniclick ? $item->uniclick : 0 ;
+                    $stats->click = $item->click ? $item->click : 0;
+                    $stats->unique_click = $item->uniclick ? $item->uniclick : 0;
                     $stats->cr = $cr . ' %';
                     $stats->approve = $this->generateAproove($item->id, $stats->click) . ' %';
                     $stats->confirmed = $this->generateByStatus($item->id, 'accept');
@@ -1294,6 +1403,6 @@ class CpasStats extends ZFrame
         return $data;
 
     }
-    #endregion
+#endregion
 }
 

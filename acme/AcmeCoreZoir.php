@@ -10,7 +10,7 @@
 
 namespace zetsoft\service\acme;
 
-require Root . '/vendori/acme/vendor/autoload.php';
+require Root . '/vendors/acme/vendor/autoload.php';
 
 use AcmePhp\Core\Http\Base64SafeEncoder;
 use AcmePhp\Core\Http\SecureHttpClientFactory;

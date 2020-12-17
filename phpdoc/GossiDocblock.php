@@ -3,7 +3,7 @@
 namespace zetsoft\service\phpdoc;
 
 
-require Root.'/vendori/phpdc/vendor/autoload.php';
+require Root.'/vendors/phpdc/vendor/autoload.php';
 
 
 use zetsoft\system\kernels\ZFrame;

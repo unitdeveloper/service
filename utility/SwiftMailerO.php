@@ -14,7 +14,7 @@
 namespace zetsoft\service\utility;
 
 
-require Root . '/vendori/utility/ALL/vendor/autoload.php';
+require Root . '/vendors/utility/ALL/vendor/autoload.php';
 
 
 use Swift_SmtpTransport;

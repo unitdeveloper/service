@@ -5,7 +5,7 @@ namespace zetsoft\service\utility;
 use zetsoft\system\Az;
 use zetsoft\system\kernels\ZFrame;
 
-require Root . '/vendori/utility/ALL/vendor/autoload.php';
+require Root . '/vendors/utility/ALL/vendor/autoload.php';
 
 /**
  * Class SwiftMailer

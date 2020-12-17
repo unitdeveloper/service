@@ -9,7 +9,7 @@
 
 namespace zetsoft\service\acme;
 
-require Root . '/vendori/rwacme/autoload.php';
+require Root . '/vendors/rwacme/autoload.php';
 
 use zetsoft\system\kernels\ZFrame;
 use Rogierw\RwAcme\Api;

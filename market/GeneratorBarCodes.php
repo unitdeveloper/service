@@ -12,7 +12,7 @@ namespace zetsoft\service\market;
 use Picqer\Barcode\BarcodeGeneratorJPG;
 use zetsoft\system\kernels\ZFrame;
 
-require Root . '/vendori/image/ALL/vendor/autoload.php';
+require Root . '/vendors/image/ALL/vendor/autoload.php';
 
 class GeneratorBarCodes extends ZFrame
 {

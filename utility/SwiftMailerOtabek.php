@@ -11,7 +11,7 @@ use \Swift_Mailer;
 use \Swift_Message;
 use Swift_Plugins_ThrottlerPlugin;
 
-require Root . '/vendori/utility/ALL/vendor/autoload.php';
+require Root . '/vendors/utility/ALL/vendor/autoload.php';
 
 /**
  * Class SwiftMailer

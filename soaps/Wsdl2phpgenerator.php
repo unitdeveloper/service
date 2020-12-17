@@ -3,7 +3,7 @@
 
 namespace zetsoft\service\soaps;
 
-require Root . '/vendori/soaps/vendor/autoload.php';
+require Root . '/vendors/soaps/vendor/autoload.php';
 
 /*
  * @package Wsdl2phpgenerator/Wsdl2phpgeneratort

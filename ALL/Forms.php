@@ -20,6 +20,7 @@ use zetsoft\service\forms\Detail;
 use zetsoft\service\forms\Dynas;
 use zetsoft\service\forms\Export;
 use zetsoft\service\forms\Former;
+use zetsoft\service\forms\Import;
 use zetsoft\service\forms\Modelz;
 use zetsoft\service\forms\Multi;
 use zetsoft\service\forms\Tabular;
@@ -39,6 +40,7 @@ use yii\base\Component;
 * @property Dynas $dynas
 * @property Export $export
 * @property Former $former
+* @property Import $import
 * @property Modelz $modelz
 * @property Multi $multi
 * @property Tabular $tabular
@@ -59,6 +61,7 @@ class Forms extends Component
     private $_dynas;
     private $_export;
     private $_former;
+    private $_import;
     private $_modelz;
     private $_multi;
     private $_tabular;
@@ -135,6 +138,15 @@ class Forms extends Component
             $this->_former = new Former();
 
         return $this->_former;
+    }
+    
+
+    public function getImport()
+    {
+        if ($this->_import === null)
+            $this->_import = new Import();
+
+        return $this->_import;
     }
     
 

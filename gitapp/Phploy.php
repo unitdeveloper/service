@@ -3,8 +3,8 @@
 namespace zetsoft\service\gitapp;
 
 
-require Root.'/vendori/gitapp/vendor/autoload.php';
-require Root. '/vendori/gitapp/vendor/banago/phploy/tests/PHPLoyTestHelper.php';
+require Root.'/vendors/gitapp/vendor/autoload.php';
+require Root. '/vendors/gitapp/vendor/banago/phploy/tests/PHPLoyTestHelper.php';
 
 use zetsoft\system\kernels\ZFrame;
 

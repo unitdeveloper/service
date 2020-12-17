@@ -5,7 +5,7 @@
 
 namespace zetsoft\service\calls;
 
-require Root . '/vendori/utility/league/vendor/autoload.php';
+require Root . '/vendors/utility/league/vendor/autoload.php';
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\Sftp\SftpAdapter;

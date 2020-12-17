@@ -7,7 +7,7 @@ namespace zetsoft\service\acme;
  * https://packagist.org/packages/stonemax/acme2
  */
 
-require Root . '/vendori/acmes/vendor/autoload.php';
+require Root . '/vendors/acmes/vendor/autoload.php';
 
 use stonemax\acme2\Client;
 use stonemax\acme2\constants\CommonConstant;

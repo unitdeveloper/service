@@ -11,7 +11,7 @@ namespace zetsoft\service\cores;
 use Sujip\Guid\Guid as GuidGenerator;
 use zetsoft\system\kernels\ZFrame;
 
-require Root . '/vendori/string/ALl/vendor/autoload.php';
+require Root . '/vendors/string/ALl/vendor/autoload.php';
 
 class Guid extends ZFrame
 {

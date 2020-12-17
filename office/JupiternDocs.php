@@ -6,7 +6,7 @@ namespace zetsoft\service\office;
 use Jupitern\Docx\DocxMerge;
 use zetsoft\system\kernels\ZFrame;
 
-require Root . '/vendori/fileapp/office/vendor/autoload.php';
+require Root . '/vendors/fileapp/office/vendor/autoload.php';
 
 
 class JupiternDocs extends ZFrame

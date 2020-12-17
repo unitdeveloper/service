@@ -3,7 +3,7 @@
 namespace zetsoft\service\gitapp;
 
 
-require Root.'/vendori/gitapp/vendor/autoload.php';
+require Root.'/vendors/gitapp/vendor/autoload.php';
 
 use yii\base\ErrorException;
 use zetsoft\system\kernels\ZFrame;

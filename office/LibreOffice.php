@@ -12,7 +12,7 @@
 namespace zetsoft\service\office;
 
 
-require Root . '/vendori/fileapp/office/vendor/autoload.php';
+require Root . '/vendors/fileapp/office/vendor/autoload.php';
 
 use zetsoft\service\process\SymfonyProcess;
 use zetsoft\system\Az;

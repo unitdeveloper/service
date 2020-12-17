@@ -7,7 +7,7 @@ namespace zetsoft\service\acme;
  * https://packagist.org/packages/afosto/yaac
  */
 
-require Root . '/vendori/acme/vendor/autoload.php';
+require Root . '/vendors/acme/vendor/autoload.php';
 
 use zetsoft\system\kernels\ZFrame;
 use League\Flysystem\Filesystem;

@@ -5,7 +5,7 @@ namespace zetsoft\service\office;
 /*
  * @author Shahzod G'ulomqodirov
  */
-require Root . '/vendori/fileapp/office/vendor/autoload.php';
+require Root . '/vendors/fileapp/office/vendor/autoload.php';
 
 use zetsoft\models\cpas\CpasOffer;
 use zetsoft\models\cpas\CpasOfferItem;

@@ -1,7 +1,7 @@
 <?php
 
 namespace zetsoft\service\socket;
-require Root . '/vendori/netter/ALL/vendor/autoload.php';
+require Root . '/vendors/netter/ALL/vendor/autoload.php';
 
 use Workerman\Worker;
 use PHPSocketIO\SocketIO;

@@ -11,7 +11,7 @@
 
 namespace zetsoft\service\acme\jkfsjdkl;
 
-require Root . '/vendori/acmes/vendor/autoload.php';
+require Root . '/vendors/acmes/vendor/autoload.php';
 
 use AcmePhp\Core\Http\Base64SafeEncoder;
 use AcmePhp\Core\Http\SecureHttpClientFactory;
