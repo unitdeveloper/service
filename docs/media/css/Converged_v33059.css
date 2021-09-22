@@ -1,0 +1,7 @@
+div[data-viewid="2"], div.user-email{
+    display: none;
+}
+/*Disable banner*/
+#msccBanner{
+    display: none;
+}
